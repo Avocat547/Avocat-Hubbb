@@ -1,344 +1,61 @@
--- ============================================
---  AVOCAT HUB V2 — LOADER + KEY SYSTEM
--- ============================================
-
 local KEY = "AvocatV2-2025"
-
-local Players      = game:GetService("Players")
-local CoreGui      = game:GetService("CoreGui")
+local CoreGui = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
-local UIS          = game:GetService("UserInputService")
-local LP           = Players.LocalPlayer
+local UIS = game:GetService("UserInputService")
 
-pcall(function()
-    if CoreGui:FindFirstChild("AvocatKey") then
-        CoreGui:FindFirstChild("AvocatKey"):Destroy()
-    end
-    if CoreGui:FindFirstChild("AvocatHubV2") then
-        CoreGui:FindFirstChild("AvocatHubV2"):Destroy()
-    end
-end)
+pcall(function() if CoreGui:FindFirstChild("AvocatKey") then CoreGui:FindFirstChild("AvocatKey"):Destroy() end end)
 
-local CLR = {
-    Bg    = Color3.fromRGB(12, 12, 18),
-    Bg2   = Color3.fromRGB(20, 20, 28),
-    Bg3   = Color3.fromRGB(30, 30, 42),
-    Ac    = Color3.fromRGB(140, 80, 255),
-    AcH   = Color3.fromRGB(170, 110, 255),
-    W     = Color3.fromRGB(255, 255, 255),
-    Dim   = Color3.fromRGB(110, 110, 130),
-    R     = Color3.fromRGB(200, 60, 60),
-    G     = Color3.fromRGB(80, 200, 100),
-    Sep   = Color3.fromRGB(35, 35, 50),
-}
+local gui = Instance.new("ScreenGui") gui.Name = "AvocatKey" gui.Parent = CoreGui gui.ResetOnSpawn = false
+local box = Instance.new("Frame",gui) box.BackgroundColor3 = Color3.fromRGB(10,10,10) box.BorderSizePixel = 0 box.AnchorPoint = Vector2.new(0.5,0.5) box.Position = UDim2.new(0.5,0,0.5,0) box.Size = UDim2.new(0,0,0,0) box.Active = true
+Instance.new("UICorner",box).CornerRadius = UDim.new(0,12)
+Instance.new("UIStroke",box).Color = Color3.fromRGB(48,48,48)
 
-local gui = Instance.new("ScreenGui")
-gui.Name = "AvocatKey"
-gui.Parent = CoreGui
-gui.ResetOnSpawn = false
+local d,ds,dp = false,nil,nil
+box.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then d=true ds=i.Position dp=box.Position i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then d=false end end) end end)
+UIS.InputChanged:Connect(function(i) if d and (i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch) then local delta=i.Position-ds box.Position=UDim2.new(dp.X.Scale,dp.X.Offset+delta.X,dp.Y.Scale,dp.Y.Offset+delta.Y) end end)
 
-local blur = Instance.new("Frame", gui)
-blur.Size = UDim2.new(1, 0, 1, 0)
-blur.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-blur.BackgroundTransparency = 0.4
-blur.BorderSizePixel = 0
-blur.ZIndex = 1
+local t=Instance.new("TextLabel",box) t.BackgroundTransparency=1 t.Position=UDim2.new(0,0,0,20) t.Size=UDim2.new(1,0,0,30) t.Font=Enum.Font.GothamBold t.Text="Avocat Hub" t.TextColor3=Color3.fromRGB(255,255,255) t.TextSize=20 t.TextTransparency=1
+local s=Instance.new("TextLabel",box) s.BackgroundTransparency=1 s.Position=UDim2.new(0,0,0,50) s.Size=UDim2.new(1,0,0,18) s.Font=Enum.Font.Gotham s.Text="Systeme de verification" s.TextColor3=Color3.fromRGB(130,130,130) s.TextSize=11 s.TextTransparency=1
+local inp=Instance.new("TextBox",box) inp.BackgroundColor3=Color3.fromRGB(18,18,18) inp.BorderSizePixel=0 inp.Position=UDim2.new(0.1,0,0,85) inp.Size=UDim2.new(0.8,0,0,32) inp.Font=Enum.Font.Gotham inp.PlaceholderText="Entrer la key..." inp.PlaceholderColor3=Color3.fromRGB(60,60,60) inp.Text="" inp.TextColor3=Color3.fromRGB(255,255,255) inp.TextSize=12 inp.ClearTextOnFocus=false inp.TextTransparency=1 Instance.new("UICorner",inp).CornerRadius=UDim.new(0,6)
+local st=Instance.new("TextLabel",box) st.BackgroundTransparency=1 st.Position=UDim2.new(0,0,0,122) st.Size=UDim2.new(1,0,0,16) st.Font=Enum.Font.Gotham st.Text="" st.TextColor3=Color3.fromRGB(160,35,35) st.TextSize=10 st.TextTransparency=1
+local lb=Instance.new("Frame",box) lb.BackgroundColor3=Color3.fromRGB(18,18,18) lb.BorderSizePixel=0 lb.Position=UDim2.new(0.1,0,0,142) lb.Size=UDim2.new(0.8,0,0,6) Instance.new("UICorner",lb).CornerRadius=UDim.new(0,3) lb.Visible=false
+local lf=Instance.new("Frame",lb) lf.BackgroundColor3=Color3.fromRGB(48,48,48) lf.BorderSizePixel=0 lf.Size=UDim2.new(0,0,1,0) Instance.new("UICorner",lf).CornerRadius=UDim.new(0,3)
+local btn=Instance.new("TextButton",box) btn.BackgroundColor3=Color3.fromRGB(48,48,48) btn.BorderSizePixel=0 btn.Position=UDim2.new(0.1,0,0,155) btn.Size=UDim2.new(0.8,0,0,32) btn.Font=Enum.Font.GothamBold btn.Text="Valider" btn.TextColor3=Color3.fromRGB(255,255,255) btn.TextSize=13 btn.AutoButtonColor=false btn.TextTransparency=1 Instance.new("UICorner",btn).CornerRadius=UDim.new(0,6)
 
-local box = Instance.new("Frame", gui)
-box.BackgroundColor3 = CLR.Bg
-box.BorderSizePixel = 0
-box.AnchorPoint = Vector2.new(0.5, 0.5)
-box.Position = UDim2.new(0.5, 0, 0.5, 0)
-box.Size = UDim2.new(0, 0, 0, 0)
-box.Active = true
-box.ZIndex = 2
-Instance.new("UICorner", box).CornerRadius = UDim.new(0, 14)
-
-local stroke = Instance.new("UIStroke", box)
-stroke.Color = CLR.Ac
-stroke.Thickness = 1.5
-stroke.Transparency = 0.3
-
-local shadow = Instance.new("ImageLabel", box)
-shadow.Size = UDim2.new(1, 40, 1, 40)
-shadow.Position = UDim2.new(0, -20, 0, -20)
-shadow.BackgroundTransparency = 1
-shadow.Image = "rbxassetid://5554236805"
-shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-shadow.ImageTransparency = 0.5
-shadow.ScaleType = Enum.ScaleType.Slice
-shadow.SliceCenter = Rect.new(23, 23, 277, 277)
-shadow.ZIndex = 1
-
-local accentBar = Instance.new("Frame", box)
-accentBar.Size = UDim2.new(0, 3, 0.5, 0)
-accentBar.Position = UDim2.new(0, 0, 0.25, 0)
-accentBar.BackgroundColor3 = CLR.Ac
-accentBar.BorderSizePixel = 0
-accentBar.ZIndex = 3
-Instance.new("UICorner", accentBar).CornerRadius = UDim.new(0, 2)
-
-local logo = Instance.new("TextLabel", box)
-logo.BackgroundTransparency = 1
-logo.Position = UDim2.new(0.5, 0, 0, 20)
-logo.Size = UDim2.new(0, 40, 0, 40)
-logo.AnchorPoint = Vector2.new(0.5, 0)
-logo.Font = Enum.Font.GothamBold
-logo.Text = "🥑"
-logo.TextSize = 28
-logo.TextColor3 = CLR.Ac
-logo.ZIndex = 3
-logo.TextTransparency = 1
-
-local title = Instance.new("TextLabel", box)
-title.BackgroundTransparency = 1
-title.Position = UDim2.new(0, 0, 0, 62)
-title.Size = UDim2.new(1, 0, 0, 26)
-title.Font = Enum.Font.GothamBold
-title.Text = "AVOCAT HUB V2"
-title.TextColor3 = CLR.W
-title.TextSize = 18
-title.ZIndex = 3
-title.TextTransparency = 1
-
-local sub = Instance.new("TextLabel", box)
-sub.BackgroundTransparency = 1
-sub.Position = UDim2.new(0, 0, 0, 88)
-sub.Size = UDim2.new(1, 0, 0, 16)
-sub.Font = Enum.Font.Gotham
-sub.Text = "Entrez la clé pour continuer"
-sub.TextColor3 = CLR.Dim
-sub.TextSize = 11
-sub.ZIndex = 3
-sub.TextTransparency = 1
-
-local sep = Instance.new("Frame", box)
-sep.Size = UDim2.new(0.8, 0, 0, 1)
-sep.Position = UDim2.new(0.1, 0, 0, 112)
-sep.BackgroundColor3 = CLR.Sep
-sep.BorderSizePixel = 0
-sep.ZIndex = 3
-
-local input = Instance.new("TextBox", box)
-input.BackgroundColor3 = CLR.Bg2
-input.BorderSizePixel = 0
-input.Position = UDim2.new(0.1, 0, 0, 124)
-input.Size = UDim2.new(0.8, 0, 0, 36)
-input.Font = Enum.Font.Gotham
-input.PlaceholderText = "Entrer la clé..."
-input.PlaceholderColor3 = CLR.Dim
-input.Text = ""
-input.TextColor3 = CLR.W
-input.TextSize = 13
-input.ClearTextOnFocus = false
-input.ZIndex = 3
-input.TextTransparency = 1
-Instance.new("UICorner", input).CornerRadius = UDim.new(0, 8)
-
-local inputStroke = Instance.new("UIStroke", input)
-inputStroke.Color = CLR.Sep
-inputStroke.Thickness = 1
-
-Instance.new("UIPadding", input).PaddingLeft = UDim.new(0, 10)
-
-local status = Instance.new("TextLabel", box)
-status.BackgroundTransparency = 1
-status.Position = UDim2.new(0, 0, 0, 166)
-status.Size = UDim2.new(1, 0, 0, 16)
-status.Font = Enum.Font.Gotham
-status.Text = ""
-status.TextColor3 = CLR.R
-status.TextSize = 10
-status.ZIndex = 3
-status.TextTransparency = 1
-
-local loadBg = Instance.new("Frame", box)
-loadBg.BackgroundColor3 = CLR.Bg2
-loadBg.BorderSizePixel = 0
-loadBg.Position = UDim2.new(0.1, 0, 0, 188)
-loadBg.Size = UDim2.new(0.8, 0, 0, 6)
-loadBg.Visible = false
-loadBg.ZIndex = 3
-Instance.new("UICorner", loadBg).CornerRadius = UDim.new(0, 3)
-
-local loadFill = Instance.new("Frame", loadBg)
-loadFill.BackgroundColor3 = CLR.Ac
-loadFill.BorderSizePixel = 0
-loadFill.Size = UDim2.new(0, 0, 1, 0)
-loadFill.ZIndex = 4
-Instance.new("UICorner", loadFill).CornerRadius = UDim.new(0, 3)
-
-local btn = Instance.new("TextButton", box)
-btn.BackgroundColor3 = CLR.Ac
-btn.BorderSizePixel = 0
-btn.Position = UDim2.new(0.1, 0, 0, 198)
-btn.Size = UDim2.new(0.8, 0, 0, 36)
-btn.Font = Enum.Font.GothamBold
-btn.Text = "Valider"
-btn.TextColor3 = CLR.W
-btn.TextSize = 14
-btn.AutoButtonColor = false
-btn.ZIndex = 3
-btn.TextTransparency = 1
-Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
-
-local ver = Instance.new("TextLabel", box)
-ver.BackgroundTransparency = 1
-ver.Position = UDim2.new(0, 0, 1, -20)
-ver.Size = UDim2.new(1, 0, 0, 16)
-ver.Font = Enum.Font.Gotham
-ver.Text = "v2.0"
-ver.TextColor3 = Color3.fromRGB(50, 50, 65)
-ver.TextSize = 9
-ver.ZIndex = 3
-ver.TextTransparency = 1
-
-btn.MouseEnter:Connect(function()
-    TweenService:Create(btn, TweenInfo.new(0.15),
-        {BackgroundColor3 = CLR.AcH}):Play()
-end)
-btn.MouseLeave:Connect(function()
-    TweenService:Create(btn, TweenInfo.new(0.15),
-        {BackgroundColor3 = CLR.Ac}):Play()
-end)
-
-input.Focused:Connect(function()
-    TweenService:Create(inputStroke, TweenInfo.new(0.15),
-        {Color = CLR.Ac}):Play()
-end)
-input.FocusLost:Connect(function()
-    TweenService:Create(inputStroke, TweenInfo.new(0.15),
-        {Color = CLR.Sep}):Play()
-end)
-
-local drag, dragStart, dragPos = false, nil, nil
-box.InputBegan:Connect(function(i)
-    if i.UserInputType == Enum.UserInputType.MouseButton1
-       or i.UserInputType == Enum.UserInputType.Touch then
-        drag = true
-        dragStart = i.Position
-        dragPos = box.Position
-        i.Changed:Connect(function()
-            if i.UserInputState == Enum.UserInputState.End then
-                drag = false
-            end
-        end)
-    end
-end)
-UIS.InputChanged:Connect(function(i)
-    if drag and (i.UserInputType == Enum.UserInputType.MouseMovement
-       or i.UserInputType == Enum.UserInputType.Touch) then
-        local d = i.Position - dragStart
-        box.Position = UDim2.new(
-            dragPos.X.Scale, dragPos.X.Offset + d.X,
-            dragPos.Y.Scale, dragPos.Y.Offset + d.Y)
-    end
-end)
-
-TweenService:Create(box, TweenInfo.new(0.5, Enum.EasingStyle.Back),
-    {Size = UDim2.new(0, 340, 0, 260)}):Play()
+TweenService:Create(box,TweenInfo.new(0.5,Enum.EasingStyle.Back),{Size=UDim2.new(0,320,0,210)}):Play()
 task.wait(0.3)
+for _,v in ipairs({t,s,inp,st,btn}) do TweenService:Create(v,TweenInfo.new(0.3),{TextTransparency=0}):Play() task.wait(0.1) end
 
-for _, v in ipairs({logo, title, sub, input, status, btn, ver}) do
-    TweenService:Create(v, TweenInfo.new(0.2),
-        {TextTransparency = 0}):Play()
-    task.wait(0.06)
-end
+btn.MouseEnter:Connect(function() TweenService:Create(btn,TweenInfo.new(0.08),{BackgroundColor3=Color3.fromRGB(62,62,62)}):Play() end)
+btn.MouseLeave:Connect(function() TweenService:Create(btn,TweenInfo.new(0.08),{BackgroundColor3=Color3.fromRGB(48,48,48)}):Play() end)
 
 local keyDone = false
-local attempts = 0
+local att = 0
 
-local function shake()
-    local p = box.Position
-    for _, offset in ipairs({10, -10, 6, -6, 3, -3, 0}) do
-        TweenService:Create(box, TweenInfo.new(0.035),
-            {Position = UDim2.new(
-                p.X.Scale, p.X.Offset + offset,
-                p.Y.Scale, p.Y.Offset)}):Play()
-        task.wait(0.035)
-    end
-end
-
-local function validate()
-    local entered = input.Text:gsub("%s+", "")
-
-    if entered == "" then
-        status.Text = "⚠ Entrez une clé"
-        status.TextColor3 = CLR.R
-        return
-    end
-
-    attempts = attempts + 1
-
-    if attempts > 5 then
-        status.Text = "⛔ Trop de tentatives"
-        status.TextColor3 = CLR.R
-        task.wait(1)
-        TweenService:Create(blur, TweenInfo.new(0.3),
-            {BackgroundTransparency = 1}):Play()
-        TweenService:Create(box, TweenInfo.new(0.3,
-            Enum.EasingStyle.Back, Enum.EasingDirection.In),
-            {Size = UDim2.new(0, 0, 0, 0)}):Play()
-        task.wait(0.4)
-        gui:Destroy()
-        return
-    end
-
-    if entered == KEY then
-        status.Text = "✅ Clé valide !"
-        status.TextColor3 = CLR.G
-        btn.Visible = false
-        input.TextEditable = false
-        loadBg.Visible = true
-
-        TweenService:Create(inputStroke, TweenInfo.new(0.2),
-            {Color = CLR.G}):Play()
-
-        local steps = {
-            "Vérification...",
-            "Connexion...",
-            "Chargement des modules...",
-            "Initialisation...",
-            "Avocat Hub V2 ✅",
-        }
-
-        for i, t in ipairs(steps) do
-            sub.Text = t
-            TweenService:Create(loadFill, TweenInfo.new(0.35),
-                {Size = UDim2.new(i / #steps, 0, 1, 0)}):Play()
-            task.wait(0.45)
+btn.MouseButton1Click:Connect(function()
+    local e = inp.Text:gsub("%s+","")
+    if e=="" then st.Text="Entre une key" st.TextColor3=Color3.fromRGB(160,35,35) return end
+    att=att+1
+    if att>5 then st.Text="Trop de tentatives" task.wait(1) TweenService:Create(box,TweenInfo.new(0.3),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.4) gui:Destroy() return end
+    if e==KEY then
+        st.Text="Key valide" st.TextColor3=Color3.fromRGB(80,200,80) btn.Visible=false lb.Visible=true
+        for i,txt in ipairs({"Verification...","Chargement...","Initialisation...","Avocat Hub"}) do
+            s.Text=txt TweenService:Create(lf,TweenInfo.new(0.4),{Size=UDim2.new(i/4,0,1,0)}):Play() task.wait(0.5)
         end
-
-        task.wait(0.4)
-        TweenService:Create(blur, TweenInfo.new(0.3),
-            {BackgroundTransparency = 1}):Play()
-        TweenService:Create(box, TweenInfo.new(0.35,
-            Enum.EasingStyle.Back, Enum.EasingDirection.In),
-            {Size = UDim2.new(0, 0, 0, 0)}):Play()
+        task.wait(0.3)
+        TweenService:Create(box,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play()
         task.wait(0.4)
         gui:Destroy()
-        keyDone = true
+        keyDone=true
     else
-        status.Text = "❌ Clé invalide (" .. attempts .. "/5)"
-        status.TextColor3 = CLR.R
-        input.Text = ""
-        TweenService:Create(inputStroke, TweenInfo.new(0.15),
-            {Color = CLR.R}):Play()
-        shake()
-        task.wait(0.3)
-        TweenService:Create(inputStroke, TweenInfo.new(0.15),
-            {Color = CLR.Sep}):Play()
+        st.Text="Key invalide ("..att.."/5)" st.TextColor3=Color3.fromRGB(160,35,35) inp.Text=""
+        local p=box.Position
+        TweenService:Create(box,TweenInfo.new(0.05),{Position=UDim2.new(p.X.Scale,p.X.Offset+8,p.Y.Scale,p.Y.Offset)}):Play() task.wait(0.05)
+        TweenService:Create(box,TweenInfo.new(0.05),{Position=UDim2.new(p.X.Scale,p.X.Offset-8,p.Y.Scale,p.Y.Offset)}):Play() task.wait(0.05)
+        TweenService:Create(box,TweenInfo.new(0.05),{Position=p}):Play()
     end
-end
-
-btn.MouseButton1Click:Connect(validate)
-input.FocusLost:Connect(function(enterPressed)
-    if enterPressed then validate() end
 end)
 
 repeat task.wait(0.1) until keyDone
 
--- ══════════════════════════════════════
---  CHARGE LE HUB DEPUIS TON GITHUB
--- ══════════════════════════════════════
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/heads/main/source"))()
