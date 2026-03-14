@@ -33,12 +33,10 @@ local function rc(p,r) Instance.new("UICorner",p).CornerRadius=UDim.new(0,r or 6
 local function mkb(p,t,col)
     local b=Instance.new("TextButton") b.BackgroundColor3=col or C.Ac b.BorderSizePixel=0 b.Size=UDim2.new(1,0,0,28) b.Font=Enum.Font.Gotham b.TextColor3=C.W b.TextSize=11 b.AutoButtonColor=false b.Text=t b.Parent=p rc(b) return b
 end
-
 local function hfx(b,ba,ho)
     b.MouseEnter:Connect(function() TweenService:Create(b,TweenInfo.new(0.08),{BackgroundColor3=ho}):Play() end)
     b.MouseLeave:Connect(function() TweenService:Create(b,TweenInfo.new(0.08),{BackgroundColor3=ba}):Play() end)
 end
-
 local function sep(p,o) local s=Instance.new("Frame") s.Parent=p s.BackgroundColor3=C.Ac s.BorderSizePixel=0 s.Size=UDim2.new(1,0,0,1) s.LayoutOrder=o end
 local function lbl(p,t,o) local l=Instance.new("TextLabel") l.Parent=p l.BackgroundTransparency=1 l.Size=UDim2.new(1,0,0,18) l.Font=Enum.Font.GothamBold l.TextColor3=C.D l.TextSize=10 l.TextXAlignment=Enum.TextXAlignment.Left l.Text="  "..t l.LayoutOrder=o end
 
@@ -65,8 +63,7 @@ local allToggles={}
 local function mkToggle(p,name,o,cfgK)
     local f=Instance.new("Frame") f.Parent=p f.BackgroundColor3=C.Bg f.BorderSizePixel=0 f.Size=UDim2.new(1,0,0,26) f.LayoutOrder=o rc(f)
     local lb=Instance.new("TextLabel",f) lb.BackgroundTransparency=1 lb.Position=UDim2.new(0,8,0,0) lb.Size=UDim2.new(1,-90,1,0) lb.Font=Enum.Font.Gotham lb.TextColor3=C.W lb.TextSize=11 lb.TextXAlignment=Enum.TextXAlignment.Left lb.Text=name
-    local kl=Instance.new("TextLabel",f) kl.BackgroundTransparency=1 kl.Position=UDim2.new(1,-82,0,0) kl.Size=UDim2.new(0,34,1,0) kl.Font=Enum.Font.Gotham kl.TextColor3=C.D kl.TextSize=8
-    local ks=cfgK and CFG[cfgK] or "" kl.Text=ks~="" and "["..ks.."]" or ""
+    local kl=Instance.new("TextLabel",f) kl.BackgroundTransparency=1 kl.Position=UDim2.new(1,-82,0,0) kl.Size=UDim2.new(0,34,1,0) kl.Font=Enum.Font.Gotham kl.TextColor3=C.D kl.TextSize=8 local ks=cfgK and CFG[cfgK] or "" kl.Text=ks~="" and "["..ks.."]" or ""
     local b=Instance.new("TextButton",f) b.BackgroundColor3=C.Bg2 b.BorderSizePixel=0 b.Position=UDim2.new(1,-44,0,3) b.Size=UDim2.new(0,36,0,20) b.Font=Enum.Font.GothamBold b.TextColor3=C.D b.TextSize=9 b.Text="OFF" b.AutoButtonColor=false rc(b,4)
     local st=false local cb=nil
     local function tog() st=not st b.Text=st and "ON" or "OFF" TweenService:Create(b,TweenInfo.new(0.12),{BackgroundColor3=st and C.Ac or C.Bg2}):Play() b.TextColor3=st and C.W or C.D if cb then cb(st) end end
@@ -76,53 +73,30 @@ local function mkToggle(p,name,o,cfgK)
 end
 
 local Main=Instance.new("Frame") Main.Parent=gui Main.Active=true Main.BackgroundColor3=C.Bg Main.BorderSizePixel=0 Main.AnchorPoint=Vector2.new(0.5,0.5) Main.Position=UDim2.new(0.5,0,0.5,0) Main.Size=UDim2.new(0,0,0,0) Main.ClipsDescendants=true rc(Main,10) Instance.new("UIStroke",Main).Color=C.Ac
-TweenService:Create(Main,TweenInfo.new(0.4,Enum.EasingStyle.Back),{Size=UDim2.new(0,380,0,470)}):Play()
-task.wait(0.3)
+TweenService:Create(Main,TweenInfo.new(0.4,Enum.EasingStyle.Back),{Size=UDim2.new(0,380,0,470)}):Play() task.wait(0.3)
 
 local Top=Instance.new("Frame") Top.Parent=Main Top.BackgroundColor3=C.Bg2 Top.BorderSizePixel=0 Top.Size=UDim2.new(1,0,0,30) rc(Top,10)
 local ttl=Instance.new("TextLabel",Top) ttl.BackgroundTransparency=1 ttl.Position=UDim2.new(0,10,0,0) ttl.Size=UDim2.new(0.5,0,1,0) ttl.Font=Enum.Font.GothamBold ttl.Text="Avocat Hub" ttl.TextColor3=C.W ttl.TextSize=13 ttl.TextXAlignment=Enum.TextXAlignment.Left
-
-local xB=Instance.new("TextButton",Top) xB.BackgroundColor3=C.Bg2 xB.BorderSizePixel=0 xB.Position=UDim2.new(1,-28,0,0) xB.Size=UDim2.new(0,28,0,30) xB.Font=Enum.Font.GothamBold xB.Text="X" xB.TextColor3=C.D xB.TextSize=11 xB.AutoButtonColor=false rc(xB,6)
-xB.MouseButton1Click:Connect(function() TweenService:Create(Main,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.35) gui:Destroy() end)
-hfx(xB,C.Bg2,C.R)
-
+local xB=Instance.new("TextButton",Top) xB.BackgroundColor3=C.Bg2 xB.BorderSizePixel=0 xB.Position=UDim2.new(1,-28,0,0) xB.Size=UDim2.new(0,28,0,30) xB.Font=Enum.Font.GothamBold xB.Text="X" xB.TextColor3=C.D xB.TextSize=11 xB.AutoButtonColor=false rc(xB,6) xB.MouseButton1Click:Connect(function() TweenService:Create(Main,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.35) gui:Destroy() end) hfx(xB,C.Bg2,C.R)
 local mBt=Instance.new("TextButton",Top) mBt.BackgroundColor3=C.Bg2 mBt.BorderSizePixel=0 mBt.Position=UDim2.new(1,-52,0,0) mBt.Size=UDim2.new(0,24,0,30) mBt.Font=Enum.Font.GothamBold mBt.Text="-" mBt.TextColor3=C.D mBt.TextSize=14 mBt.AutoButtonColor=false
-local mni=false
-mBt.MouseButton1Click:Connect(function()
-    mni=not mni
-    TweenService:Create(Main,TweenInfo.new(0.15),{Size=mni and UDim2.new(0,380,0,30) or UDim2.new(0,380,0,470)}):Play()
-    mBt.Text=mni and "+" or "-"
-end)
+local mni=false mBt.MouseButton1Click:Connect(function() mni=not mni TweenService:Create(Main,TweenInfo.new(0.15),{Size=mni and UDim2.new(0,380,0,30) or UDim2.new(0,380,0,470)}):Play() mBt.Text=mni and "+" or "-" end)
 
 local tabN={"Move","Combat","Players","Tools","Ext","Config"}
 local tbs,pgs={},{}
 local tabF=Instance.new("Frame",Main) tabF.BackgroundTransparency=1 tabF.Position=UDim2.new(0,4,0,33) tabF.Size=UDim2.new(1,-8,0,22)
-for i,n in ipairs(tabN) do
-    local t=Instance.new("TextButton",tabF) t.BackgroundColor3=i==1 and C.Ac or C.Bg2 t.BorderSizePixel=0 t.Position=UDim2.new((i-1)/#tabN,1,0,0) t.Size=UDim2.new(1/#tabN,-2,1,0) t.Font=Enum.Font.GothamBold t.Text=n t.TextColor3=i==1 and C.W or C.D t.TextSize=9 t.AutoButtonColor=false rc(t) tbs[n]=t
-end
+for i,n in ipairs(tabN) do local t=Instance.new("TextButton",tabF) t.BackgroundColor3=i==1 and C.Ac or C.Bg2 t.BorderSizePixel=0 t.Position=UDim2.new((i-1)/#tabN,1,0,0) t.Size=UDim2.new(1/#tabN,-2,1,0) t.Font=Enum.Font.GothamBold t.Text=n t.TextColor3=i==1 and C.W or C.D t.TextSize=9 t.AutoButtonColor=false rc(t) tbs[n]=t end
 local function stab(name) for n,t in pairs(tbs) do local s=n==name TweenService:Create(t,TweenInfo.new(0.12),{BackgroundColor3=s and C.Ac or C.Bg2}):Play() t.TextColor3=s and C.W or C.D end for n,p in pairs(pgs) do p.Visible=n==name end end
 for n,t in pairs(tbs) do t.MouseButton1Click:Connect(function() stab(n) end) end
 local cY=58
 
--- MOVE TAB
+-- MOVE
 local mvP=Instance.new("Frame",Main) mvP.BackgroundTransparency=1 mvP.Position=UDim2.new(0,0,0,cY) mvP.Size=UDim2.new(1,0,1,-cY) mvP.Visible=true pgs["Move"]=mvP
 local mvS=mscr(mvP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
 lbl(mvS,"MOVEMENT",1)
-local tFly=mkToggle(mvS,"Fly",2,"flyKey")
-local sFlySpd=mkSlider(mvS,"Fly Speed",10,300,80,3)
-local tNoclip=mkToggle(mvS,"Noclip",4,"noclipKey")
-local tInfJ=mkToggle(mvS,"Infinite Jump",5,"infJumpKey")
-local sSpd=mkSlider(mvS,"WalkSpeed",16,500,16,6)
-local tSpin=mkToggle(mvS,"Spin",7)
-local sSpinSpd=mkSlider(mvS,"Spin Speed",1,100,20,8)
-sep(mvS,9)
-lbl(mvS,"CAMERA",10)
-local tFreecam=mkToggle(mvS,"Freecam",11,"freecamKey")
-local sFov=mkSlider(mvS,"FOV",70,120,70,12)
-sep(mvS,13)
-lbl(mvS,"TELEPORT",14)
-local tpFrame=Instance.new("Frame",mvS) tpFrame.BackgroundColor3=C.Bg tpFrame.BorderSizePixel=0 tpFrame.Size=UDim2.new(1,0,0,56) tpFrame.LayoutOrder=15 rc(tpFrame)
-local tpPad=Instance.new("UIPadding",tpFrame) tpPad.PaddingLeft=UDim.new(0,6) tpPad.PaddingRight=UDim.new(0,6) tpPad.PaddingTop=UDim.new(0,4)
+local tFly=mkToggle(mvS,"Fly",2,"flyKey") local sFlySpd=mkSlider(mvS,"Fly Speed",10,300,80,3) local tNoclip=mkToggle(mvS,"Noclip",4,"noclipKey") local tInfJ=mkToggle(mvS,"Infinite Jump",5,"infJumpKey") local sSpd=mkSlider(mvS,"WalkSpeed",16,500,16,6) local tSpin=mkToggle(mvS,"Spin",7) local sSpinSpd=mkSlider(mvS,"Spin Speed",1,100,20,8)
+sep(mvS,9) lbl(mvS,"CAMERA",10) local tFreecam=mkToggle(mvS,"Freecam",11,"freecamKey") local sFov=mkSlider(mvS,"FOV",70,120,70,12)
+sep(mvS,13) lbl(mvS,"TELEPORT",14)
+local tpFrame=Instance.new("Frame",mvS) tpFrame.BackgroundColor3=C.Bg tpFrame.BorderSizePixel=0 tpFrame.Size=UDim2.new(1,0,0,56) tpFrame.LayoutOrder=15 rc(tpFrame) local tpPad=Instance.new("UIPadding",tpFrame) tpPad.PaddingLeft=UDim.new(0,6) tpPad.PaddingRight=UDim.new(0,6) tpPad.PaddingTop=UDim.new(0,4)
 local tpLbl=Instance.new("TextLabel",tpFrame) tpLbl.BackgroundTransparency=1 tpLbl.Size=UDim2.new(1,0,0,14) tpLbl.Font=Enum.Font.Gotham tpLbl.TextColor3=C.D tpLbl.TextSize=9 tpLbl.TextXAlignment=Enum.TextXAlignment.Left tpLbl.Text="Coordonnees X Y Z"
 local tpX=Instance.new("TextBox",tpFrame) tpX.BackgroundColor3=C.Bg2 tpX.BorderSizePixel=0 tpX.Position=UDim2.new(0,0,0,18) tpX.Size=UDim2.new(0.25,-4,0,26) tpX.Font=Enum.Font.Gotham tpX.PlaceholderText="X" tpX.PlaceholderColor3=C.D tpX.Text="" tpX.TextColor3=C.W tpX.TextSize=11 rc(tpX,4)
 local tpY=Instance.new("TextBox",tpFrame) tpY.BackgroundColor3=C.Bg2 tpY.BorderSizePixel=0 tpY.Position=UDim2.new(0.25,2,0,18) tpY.Size=UDim2.new(0.25,-4,0,26) tpY.Font=Enum.Font.Gotham tpY.PlaceholderText="Y" tpY.PlaceholderColor3=C.D tpY.Text="" tpY.TextColor3=C.W tpY.TextSize=11 rc(tpY,4)
@@ -132,92 +106,66 @@ tpGo.MouseButton1Click:Connect(function() pcall(function() local hrp=ghrp() if h
 local tpCopy=mkb(mvS,"Copier ma position",C.Bg) tpCopy.LayoutOrder=16 tpCopy.Font=Enum.Font.Gotham tpCopy.TextSize=10 hfx(tpCopy,C.Bg,C.Ac)
 tpCopy.MouseButton1Click:Connect(function() pcall(function() local hrp=ghrp() if hrp then local p=hrp.Position tpX.Text=tostring(math.floor(p.X)) tpY.Text=tostring(math.floor(p.Y)) tpZ.Text=tostring(math.floor(p.Z)) pcall(function() if setclipboard then setclipboard(math.floor(p.X)..","..math.floor(p.Y)..","..math.floor(p.Z)) end end) end end) end)
 
--- COMBAT TAB
+-- COMBAT
 local cbP=Instance.new("Frame",Main) cbP.BackgroundTransparency=1 cbP.Position=UDim2.new(0,0,0,cY) cbP.Size=UDim2.new(1,0,1,-cY) cbP.Visible=false pgs["Combat"]=cbP
 local cbS=mscr(cbP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
-lbl(cbS,"DEFENSE",1)
-local tGod=mkToggle(cbS,"God Mode",2,"godKey")
-local tAntiVoid=mkToggle(cbS,"Anti Void",3,"antiVoidKey")
-sep(cbS,4)
-lbl(cbS,"HITBOX & AIM",5)
-local tHitbox=mkToggle(cbS,"Hitbox Expander",6)
-local sHitbox=mkSlider(cbS,"Hitbox Size",1,20,5,7)
-local tAimbot=mkToggle(cbS,"Aimbot",8)
-local tAutoClick=mkToggle(cbS,"Auto Click",9)
-local sClickSpd=mkSlider(cbS,"Click Speed (ms)",10,500,50,10)
-sep(cbS,11)
-lbl(cbS,"VISUALS",12)
-local tESP=mkToggle(cbS,"ESP",13,"espKey")
-local tFullbright=mkToggle(cbS,"Fullbright",14,"fullbrightKey")
-local tNoFog=mkToggle(cbS,"No Fog",15,"noFogKey")
-sep(cbS,16)
-lbl(cbS,"AC BYPASS",17)
-local tAdonis=mkToggle(cbS,"AC Bypass",18)
-sep(cbS,19)
-lbl(cbS,"SERVER",20)
-local sCrashPow=mkSlider(cbS,"Crash Power",1,10,5,21)
-local crashBtn=mkb(cbS,"Server Crasher",C.R) crashBtn.LayoutOrder=22 crashBtn.Font=Enum.Font.GothamBold hfx(crashBtn,C.R,C.RH)
+lbl(cbS,"DEFENSE",1) local tGod=mkToggle(cbS,"God Mode",2,"godKey") local tAntiVoid=mkToggle(cbS,"Anti Void",3,"antiVoidKey")
+sep(cbS,4) lbl(cbS,"HITBOX",5) local tHitbox=mkToggle(cbS,"Hitbox Expander",6) local sHitbox=mkSlider(cbS,"Hitbox Size",1,20,5,7)
+sep(cbS,8) lbl(cbS,"AIMBOT",9) local tAimbot=mkToggle(cbS,"Aimbot (clic droit)",10) local tAutoClick=mkToggle(cbS,"Auto Click",11) local sClickSpd=mkSlider(cbS,"Click Speed (ms)",10,500,50,12)
+sep(cbS,13) lbl(cbS,"VISUALS",14) local tESP=mkToggle(cbS,"ESP",15,"espKey") local tFullbright=mkToggle(cbS,"Fullbright",16,"fullbrightKey") local tNoFog=mkToggle(cbS,"No Fog",17,"noFogKey")
+sep(cbS,18) lbl(cbS,"AC BYPASS",19) local tAdonis=mkToggle(cbS,"AC Bypass",20)
+sep(cbS,21) lbl(cbS,"SERVER",22) local sCrashPow=mkSlider(cbS,"Crash Power",1,10,5,23)
+local crashBtn=mkb(cbS,"Server Crasher",C.R) crashBtn.LayoutOrder=24 crashBtn.Font=Enum.Font.GothamBold hfx(crashBtn,C.R,C.RH)
 local crashOn=false
-crashBtn.MouseButton1Click:Connect(function()
-    if crashOn then crashOn=false crashBtn.Text="Server Crasher" TweenService:Create(crashBtn,TweenInfo.new(0.1),{BackgroundColor3=C.R}):Play() return end
-    crashOn=true crashBtn.Text="Stop" TweenService:Create(crashBtn,TweenInfo.new(0.1),{BackgroundColor3=C.AcH}):Play()
-    task.spawn(function() while crashOn do pcall(function() local pw=sCrashPow.val for _,v in ipairs(game:GetDescendants()) do if not crashOn then break end if v:IsA("RemoteEvent") then pcall(function() for i=1,pw do v:FireServer(string.rep("A",pw*2000),math.huge) end end) end end end) if not crashOn then break end task.wait(0.05) end end)
-end)
-sep(cbS,23)
-lbl(cbS,"MISC",24)
-local tAntiAfk=mkToggle(cbS,"Anti AFK",25,"antiAfkKey")
-local tAntiSlow=mkToggle(cbS,"Anti Slowdown",26,"antiSlowKey")-- PLAYERS TAB
+crashBtn.MouseButton1Click:Connect(function() if crashOn then crashOn=false crashBtn.Text="Server Crasher" TweenService:Create(crashBtn,TweenInfo.new(0.1),{BackgroundColor3=C.R}):Play() return end crashOn=true crashBtn.Text="Stop" TweenService:Create(crashBtn,TweenInfo.new(0.1),{BackgroundColor3=C.AcH}):Play() task.spawn(function() while crashOn do pcall(function() local pw=sCrashPow.val for _,v in ipairs(game:GetDescendants()) do if not crashOn then break end if v:IsA("RemoteEvent") then pcall(function() for i=1,pw do v:FireServer(string.rep("A",pw*2000),math.huge) end end) end end end) if not crashOn then break end task.wait(0.05) end end) end)
+sep(cbS,25) lbl(cbS,"MISC",26) local tAntiAfk=mkToggle(cbS,"Anti AFK",27,"antiAfkKey") local tAntiSlow=mkToggle(cbS,"Anti Slowdown",28,"antiSlowKey")-- PLAYERS
+local selPlayer=nil
 local jP=Instance.new("Frame",Main) jP.BackgroundTransparency=1 jP.Position=UDim2.new(0,0,0,cY) jP.Size=UDim2.new(1,0,1,-cY) jP.Visible=false pgs["Players"]=jP
-local jSt=Instance.new("TextLabel",jP) jSt.BackgroundColor3=C.Bg2 jSt.BorderSizePixel=0 jSt.Position=UDim2.new(0,4,0,0) jSt.Size=UDim2.new(1,-8,0,20) jSt.Font=Enum.Font.GothamBold jSt.Text="Idle" jSt.TextColor3=C.D jSt.TextSize=10 rc(jSt)
-local jAf=Instance.new("Frame",jP) jAf.BackgroundTransparency=1 jAf.Position=UDim2.new(0,4,0,24) jAf.Size=UDim2.new(1,-8,0,26)
-local jBN={"Stop","All","Touch","Follow","Bang","Unspec"} local jBO={}
-for i,n in ipairs(jBN) do local b=mkb(jAf,n,n=="Stop" and C.R or C.Ac) b.Position=UDim2.new((i-1)/#jBN,1,0,0) b.Size=UDim2.new(1/#jBN,-2,1,0) b.Font=Enum.Font.GothamBold b.TextSize=8 hfx(b,n=="Stop" and C.R or C.Ac,n=="Stop" and C.RH or C.AcH) jBO[n]=b end
-local jSearch=Instance.new("TextBox",jP) jSearch.BackgroundColor3=C.Bg2 jSearch.BorderSizePixel=0 jSearch.Position=UDim2.new(0,4,0,54) jSearch.Size=UDim2.new(1,-8,0,22) jSearch.Font=Enum.Font.Gotham jSearch.PlaceholderText="Rechercher joueur..." jSearch.PlaceholderColor3=C.D jSearch.Text="" jSearch.TextColor3=C.W jSearch.TextSize=10 jSearch.ClearTextOnFocus=false rc(jSearch)
-local jScr=mscr(jP,UDim2.new(0,4,0,80),UDim2.new(1,-8,1,-116))
-local jRef=mkb(jP,"Actualiser",C.Ac) jRef.Position=UDim2.new(0,4,1,-32) jRef.Size=UDim2.new(1,-8,0,28) jRef.Font=Enum.Font.GothamBold hfx(jRef,C.Ac,C.AcH)
-jBO["Unspec"].MouseButton1Click:Connect(function() pcall(function() cam.CameraSubject=gc():FindFirstChildOfClass("Humanoid") end) jSt.Text="Idle" jSt.TextColor3=C.D end)
 
--- TOOLS TAB
+local jSt=Instance.new("TextLabel",jP) jSt.BackgroundColor3=C.Bg2 jSt.BorderSizePixel=0 jSt.Position=UDim2.new(0,4,0,0) jSt.Size=UDim2.new(1,-8,0,20) jSt.Font=Enum.Font.GothamBold jSt.Text="Idle" jSt.TextColor3=C.D jSt.TextSize=10 rc(jSt)
+
+local jBtnFrame=Instance.new("Frame",jP) jBtnFrame.BackgroundTransparency=1 jBtnFrame.Position=UDim2.new(0,4,0,24) jBtnFrame.Size=UDim2.new(1,-8,0,52)
+local jBO={}
+for i,n in ipairs({"Stop","Fling All","Touch"}) do local key=n=="Fling All" and "All" or n local b=mkb(jBtnFrame,n,n=="Stop" and C.R or C.Ac) b.Position=UDim2.new((i-1)/3,1,0,0) b.Size=UDim2.new(1/3,-2,0,24) b.Font=Enum.Font.GothamBold b.TextSize=9 hfx(b,n=="Stop" and C.R or C.Ac,n=="Stop" and C.RH or C.AcH) jBO[key]=b end
+for i,n in ipairs({"Unspec"}) do local b=mkb(jBtnFrame,n,C.Ac) b.Position=UDim2.new((i-1)/3,1,0,26) b.Size=UDim2.new(1/3,-2,0,24) b.Font=Enum.Font.GothamBold b.TextSize=9 hfx(b,C.Ac,C.AcH) jBO[n]=b end
+
+jBO["Unspec"].MouseButton1Click:Connect(function() pcall(function() cam.CameraSubject=gc():FindFirstChildOfClass("Humanoid") end) selPlayer=nil jSt.Text="Idle" jSt.TextColor3=C.D end)
+
+local jSearch=Instance.new("TextBox",jP) jSearch.BackgroundColor3=C.Bg2 jSearch.BorderSizePixel=0 jSearch.Position=UDim2.new(0,4,0,80) jSearch.Size=UDim2.new(1,-8,0,22) jSearch.Font=Enum.Font.Gotham jSearch.PlaceholderText="Rechercher joueur..." jSearch.PlaceholderColor3=C.D jSearch.Text="" jSearch.TextColor3=C.W jSearch.TextSize=10 jSearch.ClearTextOnFocus=false rc(jSearch)
+local jScr=mscr(jP,UDim2.new(0,4,0,106),UDim2.new(1,-8,1,-142))
+local jRef=mkb(jP,"Actualiser",C.Ac) jRef.Position=UDim2.new(0,4,1,-32) jRef.Size=UDim2.new(1,-8,0,28) jRef.Font=Enum.Font.GothamBold hfx(jRef,C.Ac,C.AcH)
+
+-- TOOLS
 local oP=Instance.new("Frame",Main) oP.BackgroundTransparency=1 oP.Position=UDim2.new(0,0,0,cY) oP.Size=UDim2.new(1,0,1,-cY) oP.Visible=false pgs["Tools"]=oP
 local oSr=Instance.new("TextBox",oP) oSr.BackgroundColor3=C.Bg2 oSr.BorderSizePixel=0 oSr.Position=UDim2.new(0,4,0,0) oSr.Size=UDim2.new(1,-8,0,24) oSr.Font=Enum.Font.Gotham oSr.PlaceholderText="Rechercher..." oSr.PlaceholderColor3=C.D oSr.Text="" oSr.TextColor3=C.W oSr.TextSize=11 oSr.ClearTextOnFocus=false rc(oSr)
 local oScr=mscr(oP,UDim2.new(0,4,0,28),UDim2.new(1,-8,1,-64))
 local oRf=mkb(oP,"Actualiser",C.Ac) oRf.Position=UDim2.new(0,4,1,-32) oRf.Size=UDim2.new(1,-8,0,28) oRf.Font=Enum.Font.GothamBold hfx(oRf,C.Ac,C.AcH)
 
--- EXT TAB
+-- EXT
 local extP=Instance.new("Frame",Main) extP.BackgroundTransparency=1 extP.Position=UDim2.new(0,0,0,cY) extP.Size=UDim2.new(1,0,1,-cY) extP.Visible=false pgs["Ext"]=extP
 local extS=mscr(extP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
 lbl(extS,"SCRIPTS",1)
 local function extBtn(name,url,o) local b=mkb(extS,name,C.Bg) b.LayoutOrder=o b.Font=Enum.Font.GothamBold hfx(b,C.Bg,C.Ac) b.MouseButton1Click:Connect(function() b.Text="..." task.spawn(function() local ok=pcall(function() loadstring(game:HttpGet(url))() end) b.Text=ok and name.." [OK]" or name.." [FAIL]" task.wait(2) b.Text=name end) end) end
 extBtn("Infinite Yield","https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source",2)
 extBtn("Dex Explorer","https://raw.githubusercontent.com/infernuz/dex/master/dex.lua",3)
-sep(extS,4)
-lbl(extS,"CHAT SPAM",5)
-local spamFrame=Instance.new("Frame",extS) spamFrame.BackgroundColor3=C.Bg spamFrame.BorderSizePixel=0 spamFrame.Size=UDim2.new(1,0,0,62) spamFrame.LayoutOrder=6 rc(spamFrame)
-local spamPad=Instance.new("UIPadding",spamFrame) spamPad.PaddingLeft=UDim.new(0,4) spamPad.PaddingRight=UDim.new(0,4) spamPad.PaddingTop=UDim.new(0,4)
+sep(extS,4) lbl(extS,"CHAT SPAM",5)
+local spamFrame=Instance.new("Frame",extS) spamFrame.BackgroundColor3=C.Bg spamFrame.BorderSizePixel=0 spamFrame.Size=UDim2.new(1,0,0,62) spamFrame.LayoutOrder=6 rc(spamFrame) local spamPad=Instance.new("UIPadding",spamFrame) spamPad.PaddingLeft=UDim.new(0,4) spamPad.PaddingRight=UDim.new(0,4) spamPad.PaddingTop=UDim.new(0,4)
 local spamMsg=Instance.new("TextBox",spamFrame) spamMsg.BackgroundColor3=C.Bg2 spamMsg.BorderSizePixel=0 spamMsg.Size=UDim2.new(1,0,0,24) spamMsg.Font=Enum.Font.Gotham spamMsg.PlaceholderText="Message..." spamMsg.PlaceholderColor3=C.D spamMsg.Text="" spamMsg.TextColor3=C.W spamMsg.TextSize=10 spamMsg.ClearTextOnFocus=false rc(spamMsg,4)
 local spamBtn=Instance.new("TextButton",spamFrame) spamBtn.BackgroundColor3=C.Ac spamBtn.BorderSizePixel=0 spamBtn.Position=UDim2.new(0,0,0,28) spamBtn.Size=UDim2.new(1,0,0,26) spamBtn.Font=Enum.Font.GothamBold spamBtn.Text="Start Spam" spamBtn.TextColor3=C.W spamBtn.TextSize=10 spamBtn.AutoButtonColor=false rc(spamBtn,4) hfx(spamBtn,C.Ac,C.AcH)
 local spamOn=false
-spamBtn.MouseButton1Click:Connect(function()
-    spamOn=not spamOn spamBtn.Text=spamOn and "Stop Spam" or "Start Spam"
-    TweenService:Create(spamBtn,TweenInfo.new(0.1),{BackgroundColor3=spamOn and C.R or C.Ac}):Play()
-    if spamOn then task.spawn(function() while spamOn do pcall(function() local msg=spamMsg.Text if msg~="" then pcall(function() RS.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg,"All") end) end end) task.wait(1) end end) end
-end)
-sep(extS,7)
-lbl(extS,"CHARGER UN SCRIPT",8)
-local extUrlF=Instance.new("Frame",extS) extUrlF.BackgroundColor3=C.Bg extUrlF.BorderSizePixel=0 extUrlF.Size=UDim2.new(1,0,0,34) extUrlF.LayoutOrder=9 rc(extUrlF)
-local extUP=Instance.new("UIPadding",extUrlF) extUP.PaddingLeft=UDim.new(0,4) extUP.PaddingRight=UDim.new(0,4) extUP.PaddingTop=UDim.new(0,4)
+spamBtn.MouseButton1Click:Connect(function() spamOn=not spamOn spamBtn.Text=spamOn and "Stop" or "Start Spam" TweenService:Create(spamBtn,TweenInfo.new(0.1),{BackgroundColor3=spamOn and C.R or C.Ac}):Play() if spamOn then task.spawn(function() while spamOn do pcall(function() if spamMsg.Text~="" then pcall(function() RS.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(spamMsg.Text,"All") end) end end) task.wait(1) end end) end end)
+sep(extS,7) lbl(extS,"CHARGER UN SCRIPT",8)
+local extUrlF=Instance.new("Frame",extS) extUrlF.BackgroundColor3=C.Bg extUrlF.BorderSizePixel=0 extUrlF.Size=UDim2.new(1,0,0,34) extUrlF.LayoutOrder=9 rc(extUrlF) local extUP=Instance.new("UIPadding",extUrlF) extUP.PaddingLeft=UDim.new(0,4) extUP.PaddingRight=UDim.new(0,4) extUP.PaddingTop=UDim.new(0,4)
 local extUrl=Instance.new("TextBox",extUrlF) extUrl.BackgroundColor3=C.Bg2 extUrl.BorderSizePixel=0 extUrl.Size=UDim2.new(0.75,-4,0,26) extUrl.Font=Enum.Font.Gotham extUrl.PlaceholderText="https://..." extUrl.PlaceholderColor3=C.D extUrl.Text="" extUrl.TextColor3=C.W extUrl.TextSize=10 extUrl.ClearTextOnFocus=false rc(extUrl,4)
 local extRun=Instance.new("TextButton",extUrlF) extRun.BackgroundColor3=C.Ac extRun.BorderSizePixel=0 extRun.Position=UDim2.new(0.75,2,0,0) extRun.Size=UDim2.new(0.25,-2,0,26) extRun.Font=Enum.Font.GothamBold extRun.Text="Run" extRun.TextColor3=C.W extRun.TextSize=11 extRun.AutoButtonColor=false rc(extRun,4) hfx(extRun,C.Ac,C.AcH)
 extRun.MouseButton1Click:Connect(function() local url=extUrl.Text if url=="" then return end extRun.Text="..." task.spawn(function() local ok=pcall(function() loadstring(game:HttpGet(url))() end) extRun.Text=ok and "OK" or "Fail" task.wait(2) extRun.Text="Run" end) end)
-sep(extS,10)
-lbl(extS,"EXECUTER DU CODE",11)
-local extCF=Instance.new("Frame",extS) extCF.BackgroundColor3=C.Bg extCF.BorderSizePixel=0 extCF.Size=UDim2.new(1,0,0,86) extCF.LayoutOrder=12 rc(extCF)
-local extCP=Instance.new("UIPadding",extCF) extCP.PaddingLeft=UDim.new(0,4) extCP.PaddingRight=UDim.new(0,4) extCP.PaddingTop=UDim.new(0,4)
+sep(extS,10) lbl(extS,"EXECUTER DU CODE",11)
+local extCF=Instance.new("Frame",extS) extCF.BackgroundColor3=C.Bg extCF.BorderSizePixel=0 extCF.Size=UDim2.new(1,0,0,86) extCF.LayoutOrder=12 rc(extCF) local extCP=Instance.new("UIPadding",extCF) extCP.PaddingLeft=UDim.new(0,4) extCP.PaddingRight=UDim.new(0,4) extCP.PaddingTop=UDim.new(0,4)
 local extCode=Instance.new("TextBox",extCF) extCode.BackgroundColor3=C.Bg2 extCode.BorderSizePixel=0 extCode.Size=UDim2.new(1,0,0,50) extCode.Font=Enum.Font.Code extCode.PlaceholderText="code..." extCode.PlaceholderColor3=C.D extCode.Text="" extCode.TextColor3=C.W extCode.TextSize=10 extCode.ClearTextOnFocus=false extCode.MultiLine=true extCode.TextWrapped=true extCode.TextYAlignment=Enum.TextYAlignment.Top rc(extCode,4)
 local extExec=Instance.new("TextButton",extCF) extExec.BackgroundColor3=C.Ac extExec.BorderSizePixel=0 extExec.Position=UDim2.new(0,0,0,54) extExec.Size=UDim2.new(1,0,0,26) extExec.Font=Enum.Font.GothamBold extExec.Text="Executer" extExec.TextColor3=C.W extExec.TextSize=11 extExec.AutoButtonColor=false rc(extExec,4) hfx(extExec,C.Ac,C.AcH)
 extExec.MouseButton1Click:Connect(function() local code=extCode.Text if code=="" then return end extExec.Text="..." task.spawn(function() local ok=pcall(function() loadstring(code)() end) extExec.Text=ok and "OK" or "Erreur" task.wait(2) extExec.Text="Executer" end) end)
 
--- CONFIG TAB
+-- CONFIG
 local cfP=Instance.new("Frame",Main) cfP.BackgroundTransparency=1 cfP.Position=UDim2.new(0,0,0,cY) cfP.Size=UDim2.new(1,0,1,-cY) cfP.Visible=false pgs["Config"]=cfP
 local cfS=mscr(cfP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
 lbl(cfS,"KEYBINDS",1)
@@ -231,15 +179,14 @@ cBtn("Rejoin",15).MouseButton1Click:Connect(function() pcall(function() TS:Telep
 cBtn("Reset Character",16).MouseButton1Click:Connect(function() pcall(function() ghum().Health=0 end) end)
 cBtn("Server Hop",17).MouseButton1Click:Connect(function() pcall(function() local d=HS:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100")) for _,s in ipairs(d.data) do if s.id~=game.JobId and s.playing<s.maxPlayers then TS:TeleportToPlaceInstance(game.PlaceId,s.id,lp) break end end end) end)
 cBtn("Copy Place ID",18).MouseButton1Click:Connect(function() pcall(function() setclipboard(tostring(game.PlaceId)) end) end)
-cBtn("Anti Lag",19).MouseButton1Click:Connect(function() pcall(function() for _,v in ipairs(WS:GetDescendants()) do pcall(function() if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") or v:IsA("Explosion") then v:Destroy() end if v:IsA("Decal") or v:IsA("Texture") then v.Transparency=1 end if v:IsA("MeshPart") or v:IsA("UnionOperation") then pcall(function() v.RenderFidelity=Enum.RenderFidelity.Performance end) end end) end for _,v in ipairs(Lighting:GetDescendants()) do pcall(function() if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") then v:Destroy() end end) end pcall(function() settings().Rendering.QualityLevel=Enum.QualityLevel.Level01 end) Lighting.GlobalShadows=false Lighting.FogEnd=1e9 pcall(function() if WS.Terrain then WS.Terrain.Decoration=false end end) pcall(function() if setfpscap then setfpscap(60) end end) game:GetService("StarterGui"):SetCore("SendNotification",{Title="Anti Lag",Text="Applique",Duration=2}) end) end)
+cBtn("Anti Lag",19).MouseButton1Click:Connect(function() pcall(function() for _,v in ipairs(WS:GetDescendants()) do pcall(function() if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") or v:IsA("Explosion") then v:Destroy() end if v:IsA("Decal") or v:IsA("Texture") then v.Transparency=1 end end) end for _,v in ipairs(Lighting:GetDescendants()) do pcall(function() if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") then v:Destroy() end end) end pcall(function() settings().Rendering.QualityLevel=Enum.QualityLevel.Level01 end) Lighting.GlobalShadows=false Lighting.FogEnd=1e9 pcall(function() if setfpscap then setfpscap(60) end end) game:GetService("StarterGui"):SetCore("SendNotification",{Title="Anti Lag",Text="Applique",Duration=2}) end) end)
 cBtn("Destroy GUI",20,C.R).MouseButton1Click:Connect(function() TweenService:Create(Main,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.35) gui:Destroy() end)-- TOOLS LOGIC
-local aTools={}
-local function fTools() local t,seen={},{} local function addT(v,tag) if v:IsA("Tool") and v.Parent and v.Parent~=lp.Backpack and v.Parent~=gc() then local k=tostring(v)..v.Name if not seen[k] then seen[k]=true table.insert(t,{T=v,S=tag}) end end end local function scan(loc,tag) pcall(function() for _,v in ipairs(loc:GetDescendants()) do pcall(function() addT(v,tag) end) end end) end scan(WS,"WS") scan(RS,"RS") pcall(function() scan(game:GetService("ServerStorage"),"SS") end) pcall(function() scan(game:GetService("Lighting"),"LT") end) pcall(function() scan(game:GetService("StarterPack"),"SP") end) pcall(function() for _,v in ipairs(game:GetDescendants()) do pcall(function() if v:IsA("Tool") and v.Parent and v.Parent~=lp.Backpack and v.Parent~=gc() then local k=tostring(v)..v.Name if not seen[k] then seen[k]=true local s="?" pcall(function() s=v.Parent.Name end) table.insert(t,{T=v,S=s}) end end end) end end) pcall(function() if getnilinstances then for _,v in ipairs(getnilinstances()) do pcall(function() if v:IsA("Tool") then local k=tostring(v)..v.Name.."nil" if not seen[k] then seen[k]=true table.insert(t,{T=v,S="Nil"}) end end end) end end end) return t end
+local aTools={} local function fTools() local t,seen={},{} local function addT(v,tag) if v:IsA("Tool") and v.Parent and v.Parent~=lp.Backpack and v.Parent~=gc() then local k=tostring(v)..v.Name if not seen[k] then seen[k]=true table.insert(t,{T=v,S=tag}) end end end local function scan(loc,tag) pcall(function() for _,v in ipairs(loc:GetDescendants()) do pcall(function() addT(v,tag) end) end end) end scan(WS,"WS") scan(RS,"RS") pcall(function() scan(game:GetService("ServerStorage"),"SS") end) pcall(function() scan(game:GetService("Lighting"),"LT") end) pcall(function() scan(game:GetService("StarterPack"),"SP") end) pcall(function() for _,v in ipairs(game:GetDescendants()) do pcall(function() if v:IsA("Tool") and v.Parent and v.Parent~=lp.Backpack and v.Parent~=gc() then local k=tostring(v)..v.Name if not seen[k] then seen[k]=true local s="?" pcall(function() s=v.Parent.Name end) table.insert(t,{T=v,S=s}) end end end) end end) pcall(function() if getnilinstances then for _,v in ipairs(getnilinstances()) do pcall(function() if v:IsA("Tool") then local k=tostring(v)..v.Name.."nil" if not seen[k] then seen[k]=true table.insert(t,{T=v,S="Nil"}) end end end) end end end) return t end
 local function rTools() for _,v in ipairs(oScr:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end aTools=fTools() local s=oSr.Text:lower() local dp={} for _,data in ipairs(aTools) do pcall(function() local n=data.T.Name local key=n.."_"..data.S if not dp[key] and (s=="" or n:lower():find(s,1,true)) then dp[key]=true local b=mkb(oScr,n.." ["..data.S.."]",C.Bg) hfx(b,C.Bg,C.Ac) b.MouseButton1Click:Connect(function() pcall(function() data.T:Clone().Parent=lp.Backpack end) end) end end) end end
 oRf.MouseButton1Click:Connect(rTools) oSr:GetPropertyChangedSignal("Text"):Connect(rTools) task.defer(rTools)
 
 -- AC BYPASS
-local function bypassAC() local bp={} pcall(function() for _,v in ipairs(game:GetDescendants()) do pcall(function() local n=v.Name:lower() if n:find("adonis") or n:find("mainmodule") then if v:IsA("LocalScript") then v.Disabled=true table.insert(bp,"Adonis: "..v.Name) end if v:IsA("ModuleScript") then pcall(function() v:Destroy() end) table.insert(bp,"Module: "..v.Name) end end if n:find("hdadmin") or n:find("hd_admin") then if v:IsA("LocalScript") then v.Disabled=true table.insert(bp,"HD: "..v.Name) end end if n:find("kohls") then if v:IsA("LocalScript") then v.Disabled=true table.insert(bp,"Kohls: "..v.Name) end end if (v:IsA("LocalScript") or v:IsA("ModuleScript")) and (n:find("anticheat") or n:find("anti_cheat") or n:find("cheatdetect") or n:find("ac_") or n:find("detection")) then v.Disabled=true table.insert(bp,"AC: "..v.Name) end if (v:IsA("RemoteEvent") or v:IsA("RemoteFunction")) and (n:find("kick") or n:find("ban") or n:find("punish")) and getconnections then for _,conn in ipairs(getconnections(v.OnClientEvent or v.OnClientInvoke)) do pcall(function() conn:Disable() end) end table.insert(bp,"Remote: "..v.Name) end end) end end) pcall(function() if hookfunction and getrawmetatable then local mt=getrawmetatable(game) if mt then local old=mt.__namecall setreadonly(mt,false) mt.__namecall=newcclosure(function(self,...) if getnamecallmethod()=="Kick" then return end return old(self,...) end) setreadonly(mt,true) table.insert(bp,"Kick hook") end end end) pcall(function() if getconnections then for _,c in ipairs(getconnections(lp.Idled)) do c:Disable() end table.insert(bp,"Anti idle") end end) if #bp>0 then warn("[Avocat Hub] "..#bp.." bypass:") for _,b in ipairs(bp) do warn("  > "..b) end end game:GetService("StarterGui"):SetCore("SendNotification",{Title="AC Bypass",Text=#bp>0 and #bp.." bypass" or "Aucun AC",Duration=3}) end
+local function bypassAC() local bp={} pcall(function() for _,v in ipairs(game:GetDescendants()) do pcall(function() local n=v.Name:lower() if n:find("adonis") or n:find("mainmodule") then if v:IsA("LocalScript") then v.Disabled=true table.insert(bp,"Adonis: "..v.Name) end if v:IsA("ModuleScript") then pcall(function() v:Destroy() end) table.insert(bp,"Module: "..v.Name) end end if n:find("hdadmin") or n:find("hd_admin") then if v:IsA("LocalScript") then v.Disabled=true table.insert(bp,"HD: "..v.Name) end end if (v:IsA("LocalScript") or v:IsA("ModuleScript")) and (n:find("anticheat") or n:find("anti_cheat") or n:find("cheatdetect") or n:find("ac_") or n:find("detection")) then v.Disabled=true table.insert(bp,"AC: "..v.Name) end if (v:IsA("RemoteEvent") or v:IsA("RemoteFunction")) and (n:find("kick") or n:find("ban") or n:find("punish")) and getconnections then for _,conn in ipairs(getconnections(v.OnClientEvent or v.OnClientInvoke)) do pcall(function() conn:Disable() end) end table.insert(bp,"Remote: "..v.Name) end end) end end) pcall(function() if hookfunction and getrawmetatable then local mt=getrawmetatable(game) if mt then local old=mt.__namecall setreadonly(mt,false) mt.__namecall=newcclosure(function(self,...) if getnamecallmethod()=="Kick" then return end return old(self,...) end) setreadonly(mt,true) table.insert(bp,"Kick hook") end end end) pcall(function() if getconnections then for _,c in ipairs(getconnections(lp.Idled)) do c:Disable() end table.insert(bp,"Anti idle") end end) if #bp>0 then warn("[Avocat Hub] "..#bp.." bypass:") for _,b in ipairs(bp) do warn("  > "..b) end end game:GetService("StarterGui"):SetCore("SendNotification",{Title="AC Bypass",Text=#bp>0 and #bp.." bypass" or "Aucun AC",Duration=3}) end
 tAdonis.on(function(s) if s then bypassAC() end end)
 
 -- FLING
@@ -255,19 +202,37 @@ local function SkidFling(TP) if FL.busy or FL.stopFlag then return end local Ch=
     pcall(function() if FL.savedFPDH then WS.FallenPartsDestroyHeight=FL.savedFPDH end end) FL.busy=false end
 
 function FL.flingOne(t) if t==lp then return end FL.stopFlag=false jSt.Text="Fling: "..t.Name jSt.TextColor3=C.W task.spawn(function() SkidFling(t) if not FL.allOn then jSt.Text="Idle" jSt.TextColor3=C.D end end) end
-function FL.flingAll() if FL.allOn then FL.allOn=false FL.stopFlag=true jBO["All"].Text="All" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Idle" jSt.TextColor3=C.D return end FL.allOn=true FL.stopFlag=false jBO["All"].Text="Stop" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.R}):Play() task.spawn(function() while FL.allOn and not FL.stopFlag do local tg={} for _,p in ipairs(Players:GetPlayers()) do if p~=lp and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then local h=p.Character:FindFirstChildOfClass("Humanoid") if h and h.Health>0 then table.insert(tg,p) end end end if #tg==0 then FL.allOn=false jBO["All"].Text="All" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Personne" jSt.TextColor3=C.D return end for _,t in ipairs(tg) do if not FL.allOn or FL.stopFlag then return end jSt.Text="All: "..t.Name jSt.TextColor3=C.W SkidFling(t) if not FL.allOn or FL.stopFlag then return end task.wait(0.5) end end end) end
+function FL.flingAll() if FL.allOn then FL.allOn=false FL.stopFlag=true jBO["All"].Text="Fling All" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Idle" jSt.TextColor3=C.D return end FL.allOn=true FL.stopFlag=false jBO["All"].Text="Stop" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.R}):Play() task.spawn(function() while FL.allOn and not FL.stopFlag do local tg={} for _,p in ipairs(Players:GetPlayers()) do if p~=lp and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then local h=p.Character:FindFirstChildOfClass("Humanoid") if h and h.Health>0 then table.insert(tg,p) end end end if #tg==0 then FL.allOn=false jBO["All"].Text="Fling All" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Personne" jSt.TextColor3=C.D return end for _,t in ipairs(tg) do if not FL.allOn or FL.stopFlag then return end jSt.Text="All: "..t.Name jSt.TextColor3=C.W SkidFling(t) if not FL.allOn or FL.stopFlag then return end task.wait(0.5) end end end) end
 function FL.touchFling() if FL.touchOn then FL.touchOn=false jBO["Touch"].Text="Touch" TweenService:Create(jBO["Touch"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Idle" jSt.TextColor3=C.D return end local hrp=ghrp() if not hrp then return end FL.touchOn=true jBO["Touch"].Text="Stop" TweenService:Create(jBO["Touch"],TweenInfo.new(0.1),{BackgroundColor3=C.R}):Play() jSt.Text="Touch Fling" jSt.TextColor3=C.W task.spawn(function() local ml=0.1 while FL.touchOn do RunService.Heartbeat:Wait() local c=gc() local h=c and c:FindFirstChild("HumanoidRootPart") while FL.touchOn and not(c and c.Parent and h and h.Parent) do RunService.Heartbeat:Wait() c=gc() h=c and c:FindFirstChild("HumanoidRootPart") end if FL.touchOn and h and h.Parent then local v=h.Velocity h.Velocity=v*10000+Vector3.new(0,10000,0) RunService.RenderStepped:Wait() if c and c.Parent and h and h.Parent then h.Velocity=v end RunService.Stepped:Wait() if c and c.Parent and h and h.Parent then h.Velocity=v+Vector3.new(0,ml,0) ml=ml*-1 end end end end) end
-function FL.follow(t) if FL.followOn then FL.followOn=false FL.followTarget=nil jBO["Follow"].Text="Follow" TweenService:Create(jBO["Follow"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Idle" jSt.TextColor3=C.D return end if not t or t==lp then return end FL.followOn=true FL.followTarget=t jBO["Follow"].Text="Stop" TweenService:Create(jBO["Follow"],TweenInfo.new(0.1),{BackgroundColor3=C.R}):Play() jSt.Text="Follow: "..t.Name jSt.TextColor3=C.W task.spawn(function() while FL.followOn and FL.followTarget do local hrp=ghrp() local th=FL.followTarget.Character and FL.followTarget.Character:FindFirstChild("HumanoidRootPart") if hrp and th then local dir=(th.Position-hrp.Position) if dir.Magnitude>5 then hrp.CFrame=CFrame.new(hrp.Position,th.Position)*CFrame.new(0,0,-3) local hum=ghum() if hum then hum:MoveTo(th.Position) end end end task.wait(0.1) end end) end
-function FL.bang(t) if FL.bangOn then FL.bangOn=false FL.bangTarget=nil jBO["Bang"].Text="Bang" TweenService:Create(jBO["Bang"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Idle" jSt.TextColor3=C.D return end if not t or t==lp then return end FL.bangOn=true FL.bangTarget=t jBO["Bang"].Text="Stop" TweenService:Create(jBO["Bang"],TweenInfo.new(0.1),{BackgroundColor3=C.R}):Play() jSt.Text="Bang: "..t.Name jSt.TextColor3=C.W task.spawn(function() local up=true while FL.bangOn and FL.bangTarget do local hrp=ghrp() local th=FL.bangTarget.Character and FL.bangTarget.Character:FindFirstChild("HumanoidRootPart") if hrp and th then hrp.CFrame=th.CFrame*(up and CFrame.new(0,0,-1.5) or CFrame.new(0,-1,-1.5)) up=not up end task.wait(0.15) end end) end
-function FL.stop() FL.allOn=false FL.stopFlag=true FL.touchOn=false FL.followOn=false FL.followTarget=nil FL.bangOn=false FL.bangTarget=nil crashOn=false spamOn=false pcall(function() local hrp=ghrp() if hrp then for _,v in ipairs(hrp:GetChildren()) do if v:IsA("BodyMover") then v:Destroy() end end hrp.Velocity=Vector3.zero hrp.RotVelocity=Vector3.zero end local h=ghum() if h then h.PlatformStand=false end end) task.wait(0.3) FL.busy=false FL.stopFlag=false jSt.Text="Idle" jSt.TextColor3=C.D for _,n in ipairs({"All","Touch","Follow","Bang"}) do jBO[n].Text=n TweenService:Create(jBO[n],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() end end
+function FL.follow(t) if FL.followOn then FL.followOn=false FL.followTarget=nil jSt.Text="Idle" jSt.TextColor3=C.D return end if not t or t==lp then return end FL.followOn=true FL.followTarget=t jSt.Text="Follow: "..t.Name jSt.TextColor3=C.W task.spawn(function() while FL.followOn and FL.followTarget do local hrp=ghrp() local th=FL.followTarget.Character and FL.followTarget.Character:FindFirstChild("HumanoidRootPart") if hrp and th and (th.Position-hrp.Position).Magnitude>5 then hrp.CFrame=CFrame.new(hrp.Position,th.Position)*CFrame.new(0,0,-3) pcall(function() ghum():MoveTo(th.Position) end) end task.wait(0.1) end end) end
+function FL.bang(t) if FL.bangOn then FL.bangOn=false FL.bangTarget=nil jSt.Text="Idle" jSt.TextColor3=C.D return end if not t or t==lp then return end FL.bangOn=true FL.bangTarget=t jSt.Text="Bang: "..t.Name jSt.TextColor3=C.W task.spawn(function() local up=true while FL.bangOn and FL.bangTarget do local hrp=ghrp() local th=FL.bangTarget.Character and FL.bangTarget.Character:FindFirstChild("HumanoidRootPart") if hrp and th then hrp.CFrame=th.CFrame*(up and CFrame.new(0,0,-1.5) or CFrame.new(0,-1,-1.5)) up=not up end task.wait(0.15) end end) end
+function FL.stop() FL.allOn=false FL.stopFlag=true FL.touchOn=false FL.followOn=false FL.followTarget=nil FL.bangOn=false FL.bangTarget=nil crashOn=false spamOn=false pcall(function() local hrp=ghrp() if hrp then for _,v in ipairs(hrp:GetChildren()) do if v:IsA("BodyMover") then v:Destroy() end end hrp.Velocity=Vector3.zero hrp.RotVelocity=Vector3.zero end local h=ghum() if h then h.PlatformStand=false end end) task.wait(0.3) FL.busy=false FL.stopFlag=false jSt.Text="Idle" jSt.TextColor3=C.D jBO["All"].Text="Fling All" jBO["Touch"].Text="Touch" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() TweenService:Create(jBO["Touch"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() end
 jBO["Stop"].MouseButton1Click:Connect(function() FL.stop() end)
 jBO["All"].MouseButton1Click:Connect(function() FL.flingAll() end)
 jBO["Touch"].MouseButton1Click:Connect(function() FL.touchFling() end)
-local selPlayer=nil
-jBO["Follow"].MouseButton1Click:Connect(function() FL.follow(selPlayer) end)
-jBO["Bang"].MouseButton1Click:Connect(function() FL.bang(selPlayer) end)
 
-local function rPlayers() for _,v in ipairs(jScr:GetChildren()) do if v:IsA("Frame") then v:Destroy() end end local search=jSearch.Text:lower() for _,p in ipairs(Players:GetPlayers()) do if p~=lp then local dn=p.DisplayName local un=p.Name if search=="" or dn:lower():find(search,1,true) or un:lower():find(search,1,true) then local row=Instance.new("Frame") row.Parent=jScr row.BackgroundColor3=C.Bg row.BorderSizePixel=0 row.Size=UDim2.new(1,0,0,26) rc(row) local nm=Instance.new("TextButton",row) nm.BackgroundTransparency=1 nm.Position=UDim2.new(0,6,0,0) nm.Size=UDim2.new(1,-80,1,0) nm.Font=Enum.Font.Gotham nm.TextColor3=C.W nm.TextSize=10 nm.TextXAlignment=Enum.TextXAlignment.Left nm.AutoButtonColor=false nm.Text=dn~=un and dn.." @"..un or un nm.MouseButton1Click:Connect(function() selPlayer=p pcall(function() cam.CameraSubject=p.Character:FindFirstChildOfClass("Humanoid") end) jSt.Text="Select: "..dn jSt.TextColor3=C.D end) local fb=Instance.new("TextButton",row) fb.BackgroundColor3=C.Ac fb.BorderSizePixel=0 fb.Position=UDim2.new(1,-72,0,2) fb.Size=UDim2.new(0,34,0,22) fb.Font=Enum.Font.GothamBold fb.TextColor3=C.W fb.TextSize=9 fb.Text="Fling" fb.AutoButtonColor=false rc(fb,4) hfx(fb,C.Ac,C.AcH) fb.MouseButton1Click:Connect(function() FL.flingOne(p) end) local tb=Instance.new("TextButton",row) tb.BackgroundColor3=C.Ac tb.BorderSizePixel=0 tb.Position=UDim2.new(1,-36,0,2) tb.Size=UDim2.new(0,32,0,22) tb.Font=Enum.Font.GothamBold tb.TextColor3=C.W tb.TextSize=9 tb.Text="TP" tb.AutoButtonColor=false rc(tb,4) hfx(tb,C.Ac,C.AcH) tb.MouseButton1Click:Connect(function() selPlayer=p pcall(function() local hrp=ghrp() local th=p.Character and p.Character:FindFirstChild("HumanoidRootPart") if hrp and th then hrp.CFrame=th.CFrame*CFrame.new(3,0,0) end end) end) end end end end
+-- PLAYER LIST avec boutons Fling/TP/Follow/Bang par joueur
+local function rPlayers()
+    for _,v in ipairs(jScr:GetChildren()) do if v:IsA("Frame") then v:Destroy() end end
+    local search=jSearch.Text:lower()
+    for _,p in ipairs(Players:GetPlayers()) do
+        if p~=lp then
+            local dn=p.DisplayName local un=p.Name
+            if search=="" or dn:lower():find(search,1,true) or un:lower():find(search,1,true) then
+                local row=Instance.new("Frame") row.Parent=jScr row.BackgroundColor3=C.Bg row.BorderSizePixel=0 row.Size=UDim2.new(1,0,0,26) rc(row)
+
+                local nm=Instance.new("TextButton",row) nm.BackgroundTransparency=1 nm.Position=UDim2.new(0,4,0,0) nm.Size=UDim2.new(1,-148,1,0) nm.Font=Enum.Font.Gotham nm.TextColor3=C.W nm.TextSize=10 nm.TextXAlignment=Enum.TextXAlignment.Left nm.AutoButtonColor=false nm.Text=dn~=un and dn.." @"..un or un
+                nm.MouseButton1Click:Connect(function() selPlayer=p pcall(function() cam.CameraSubject=p.Character:FindFirstChildOfClass("Humanoid") end) jSt.Text="Spec: "..dn jSt.TextColor3=C.D end)
+
+                local btnData={{"F",function() FL.flingOne(p) end},{"TP",function() pcall(function() local hrp=ghrp() local th=p.Character and p.Character:FindFirstChild("HumanoidRootPart") if hrp and th then hrp.CFrame=th.CFrame*CFrame.new(3,0,0) end end) end},{"Fw",function() selPlayer=p FL.follow(p) end},{"B",function() selPlayer=p FL.bang(p) end}}
+
+                for i,bd in ipairs(btnData) do
+                    local ab=Instance.new("TextButton",row) ab.BackgroundColor3=C.Ac ab.BorderSizePixel=0 ab.Position=UDim2.new(1,-(#btnData-i+1)*36-2,0,2) ab.Size=UDim2.new(0,34,0,22) ab.Font=Enum.Font.GothamBold ab.TextColor3=C.W ab.TextSize=9 ab.Text=bd[1] ab.AutoButtonColor=false rc(ab,4) hfx(ab,C.Ac,C.AcH) ab.MouseButton1Click:Connect(bd[2])
+                end
+            end
+        end
+    end
+end
 jRef.MouseButton1Click:Connect(rPlayers) jSearch:GetPropertyChangedSignal("Text"):Connect(rPlayers) task.defer(rPlayers) Players.PlayerAdded:Connect(function() task.wait(1) rPlayers() end) Players.PlayerRemoving:Connect(function() task.wait(0.5) rPlayers() end)
 
 -- ALL LOGIC
