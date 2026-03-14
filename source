@@ -2,15 +2,12 @@ local KEY="AvocatV2-2025"
 local TweenService=game:GetService("TweenService")
 local UIS=game:GetService("UserInputService")
 local LP=game:GetService("Players").LocalPlayer
-
 pcall(function() if game:GetService("CoreGui"):FindFirstChild("AvocatKey") then game:GetService("CoreGui"):FindFirstChild("AvocatKey"):Destroy() end end)
 pcall(function() if game:GetService("CoreGui"):FindFirstChild("AvocatHub") then game:GetService("CoreGui"):FindFirstChild("AvocatHub"):Destroy() end end)
-
 local gui=Instance.new("ScreenGui") gui.Name="AvocatKey" gui.ResetOnSpawn=false
 pcall(function() if syn and syn.protect_gui then syn.protect_gui(gui) end end)
 pcall(function() if gethui then gui.Parent=gethui() else gui.Parent=game:GetService("CoreGui") end end)
 if not gui.Parent then gui.Parent=LP:WaitForChild("PlayerGui") end
-
 local box=Instance.new("Frame",gui) box.BackgroundColor3=Color3.fromRGB(10,10,10) box.BorderSizePixel=0 box.AnchorPoint=Vector2.new(0.5,0.5) box.Position=UDim2.new(0.5,0,0.5,0) box.Size=UDim2.new(0,0,0,0) box.Active=true Instance.new("UICorner",box).CornerRadius=UDim.new(0,12) Instance.new("UIStroke",box).Color=Color3.fromRGB(48,48,48)
 local dr,drs,drp=false,nil,nil box.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then dr=true drs=i.Position drp=box.Position i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then dr=false end end) end end) UIS.InputChanged:Connect(function(i) if dr and(i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch)then local delta=i.Position-drs box.Position=UDim2.new(drp.X.Scale,drp.X.Offset+delta.X,drp.Y.Scale,drp.Y.Offset+delta.Y) end end)
 local t=Instance.new("TextLabel",box) t.BackgroundTransparency=1 t.Position=UDim2.new(0,0,0,20) t.Size=UDim2.new(1,0,0,30) t.Font=Enum.Font.GothamBold t.Text="Avocat Hub" t.TextColor3=Color3.fromRGB(255,255,255) t.TextSize=20 t.TextTransparency=1
