@@ -22,4 +22,30 @@ btn.MouseEnter:Connect(function() TweenService:Create(btn,TweenInfo.new(0.08),{B
 local keyDone=false local att=0
 btn.MouseButton1Click:Connect(function() local e=inp.Text:gsub("%s+","") if e=="" then st.Text="Entre une key" st.TextColor3=Color3.fromRGB(160,35,35) return end att=att+1 if att>5 then st.Text="Trop de tentatives" task.wait(1) TweenService:Create(box,TweenInfo.new(0.3),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.4) gui:Destroy() return end if e==KEY then st.Text="Key valide" st.TextColor3=Color3.fromRGB(80,200,80) btn.Visible=false lb.Visible=true for i,txt in ipairs({"Verification...","Chargement...","Initialisation...","Avocat Hub"}) do s.Text=txt TweenService:Create(lf,TweenInfo.new(0.4),{Size=UDim2.new(i/4,0,1,0)}):Play() task.wait(0.5) end task.wait(0.3) TweenService:Create(box,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.4) gui:Destroy() keyDone=true else st.Text="Key invalide ("..att.."/5)" st.TextColor3=Color3.fromRGB(160,35,35) inp.Text="" local p=box.Position TweenService:Create(box,TweenInfo.new(0.05),{Position=UDim2.new(p.X.Scale,p.X.Offset+8,p.Y.Scale,p.Y.Offset)}):Play() task.wait(0.05) TweenService:Create(box,TweenInfo.new(0.05),{Position=UDim2.new(p.X.Scale,p.X.Offset-8,p.Y.Scale,p.Y.Offset)}):Play() task.wait(0.05) TweenService:Create(box,TweenInfo.new(0.05),{Position=p}):Play() end end)
 repeat task.wait(0.1) until keyDone
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/heads/main/hub.lua"))()
+
+-- CHARGEMENT AVEC DEBUG
+local url="https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/heads/main/hub.lua"
+local success,code=pcall(function()
+    return game:HttpGet(url)
+end)
+if not success then
+    warn("[AVOCAT] Erreur HttpGet: "..tostring(code))
+    game:GetService("StarterGui"):SetCore("SendNotification",{Title="Erreur",Text="Impossible de telecharger le script",Duration=5})
+    return
+end
+if not code or code=="" then
+    warn("[AVOCAT] Script vide")
+    game:GetService("StarterGui"):SetCore("SendNotification",{Title="Erreur",Text="Script vide sur GitHub",Duration=5})
+    return
+end
+local fn,err=loadstring(code)
+if not fn then
+    warn("[AVOCAT] Erreur loadstring: "..tostring(err))
+    game:GetService("StarterGui"):SetCore("SendNotification",{Title="Erreur",Text="Erreur dans le script: "..tostring(err),Duration=10})
+    return
+end
+local ok,runErr=pcall(fn)
+if not ok then
+    warn("[AVOCAT] Erreur execution: "..tostring(runErr))
+    game:GetService("StarterGui"):SetCore("SendNotification",{Title="Erreur",Text="Crash: "..tostring(runErr),Duration=10})
+end
