@@ -27,7 +27,6 @@ pcall(function() if syn and syn.protect_gui then syn.protect_gui(gui) end end)
 pcall(function() if gethui then gui.Parent=gethui() else gui.Parent=CoreGui end end)
 if not gui.Parent then gui.Parent=lp:WaitForChild("PlayerGui") end
 
--- COULEURS ORIGINALES
 local C={Bg=Color3.fromRGB(10,10,10),Bg2=Color3.fromRGB(18,18,18),Bg3=Color3.fromRGB(28,28,28),Ac=Color3.fromRGB(48,48,48),AcH=Color3.fromRGB(62,62,62),AcL=Color3.fromRGB(35,35,35),W=Color3.fromRGB(255,255,255),D=Color3.fromRGB(130,130,130),R=Color3.fromRGB(160,35,35),RH=Color3.fromRGB(200,50,50)}
 
 local function gc() return lp.Character end
@@ -39,12 +38,13 @@ local function hfx(b,ba,ho) b.MouseEnter:Connect(function() TweenService:Create(
 local function sep(p,o) local s=Instance.new("Frame") s.Parent=p s.BackgroundColor3=C.Ac s.BorderSizePixel=0 s.Size=UDim2.new(1,0,0,1) s.LayoutOrder=o end
 local function lbl(p,t,o) local l=Instance.new("TextLabel") l.Parent=p l.BackgroundTransparency=1 l.Size=UDim2.new(1,0,0,18) l.Font=Enum.Font.GothamBold l.TextColor3=C.D l.TextSize=10 l.TextXAlignment=Enum.TextXAlignment.Left l.Text="  "..t l.LayoutOrder=o end
 local function mscr(p,pos,sz) local sf=Instance.new("ScrollingFrame") sf.Parent=p sf.Active=true sf.BackgroundColor3=C.Bg2 sf.BorderSizePixel=0 sf.Position=pos sf.Size=sz sf.ScrollBarThickness=3 sf.ScrollBarImageColor3=C.Ac sf.CanvasSize=UDim2.new(0,0,0,0) rc(sf,8) local pd=Instance.new("UIPadding",sf) pd.PaddingTop=UDim.new(0,4) pd.PaddingBottom=UDim.new(0,4) pd.PaddingLeft=UDim.new(0,4) pd.PaddingRight=UDim.new(0,4) local l=Instance.new("UIListLayout",sf) l.SortOrder=Enum.SortOrder.LayoutOrder l.Padding=UDim.new(0,2) l:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() sf.CanvasSize=UDim2.new(0,0,0,l.AbsoluteContentSize.Y+8) end) return sf end
+
 local sliders={}
 local function mkSlider(p,name,mn,mx,def,o) local f=Instance.new("Frame") f.Parent=p f.BackgroundColor3=C.Bg f.BorderSizePixel=0 f.Size=UDim2.new(1,0,0,34) f.LayoutOrder=o rc(f) local lb=Instance.new("TextLabel",f) lb.BackgroundTransparency=1 lb.Position=UDim2.new(0,8,0,0) lb.Size=UDim2.new(1,-16,0,16) lb.Font=Enum.Font.Gotham lb.TextColor3=C.D lb.TextSize=10 lb.TextXAlignment=Enum.TextXAlignment.Left lb.Text=name..": "..def local bg=Instance.new("Frame",f) bg.BackgroundColor3=C.Bg2 bg.BorderSizePixel=0 bg.Position=UDim2.new(0,8,0,19) bg.Size=UDim2.new(1,-16,0,10) rc(bg,4) local fl=Instance.new("Frame",bg) fl.BackgroundColor3=C.Ac fl.BorderSizePixel=0 fl.Size=UDim2.new(math.clamp((def-mn)/(mx-mn),0,1),0,1,0) rc(fl,4) local s={bg=bg,fill=fl,label=lb,name=name,min=mn,max=mx,val=def,dragging=false,cb=nil} bg.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then s.dragging=true end end) table.insert(sliders,s) return s end
-local allToggles={}
-local function mkToggle(p,name,o,cfgK) local f=Instance.new("Frame") f.Parent=p f.BackgroundColor3=C.Bg f.BorderSizePixel=0 f.Size=UDim2.new(1,0,0,26) f.LayoutOrder=o rc(f) local lb=Instance.new("TextLabel",f) lb.BackgroundTransparency=1 lb.Position=UDim2.new(0,8,0,0) lb.Size=UDim2.new(1,-90,1,0) lb.Font=Enum.Font.Gotham lb.TextColor3=C.W lb.TextSize=11 lb.TextXAlignment=Enum.TextXAlignment.Left lb.Text=name local kl=Instance.new("TextLabel",f) kl.BackgroundTransparency=1 kl.Position=UDim2.new(1,-82,0,0) kl.Size=UDim2.new(0,34,1,0) kl.Font=Enum.Font.Gotham kl.TextColor3=C.D kl.TextSize=8 local ks=cfgK and CFG[cfgK] or "" kl.Text=ks~="" and "["..ks.."]" or "" local b=Instance.new("TextButton",f) b.BackgroundColor3=C.Bg2 b.BorderSizePixel=0 b.Position=UDim2.new(1,-44,0,3) b.Size=UDim2.new(0,36,0,20) b.Font=Enum.Font.GothamBold b.TextColor3=C.D b.TextSize=9 b.Text="OFF" b.AutoButtonColor=false rc(b,4) local st=false local cb=nil local function tog() st=not st b.Text=st and "ON" or "OFF" TweenService:Create(b,TweenInfo.new(0.12),{BackgroundColor3=st and C.Ac or C.Bg2}):Play() b.TextColor3=st and C.W or C.D if cb then cb(st) end end b.MouseButton1Click:Connect(tog) local obj={set=function(s) if s~=st then tog() end end,get=function() return st end,on=function(c) cb=c end,toggle=tog,cfgKey=cfgK,updateKeyLabel=function() local k=cfgK and CFG[cfgK] or "" kl.Text=k~="" and "["..k.."]" or "" end} table.insert(allToggles,obj) return obj end
 
--- MAIN FRAME
+local allToggles={}
+local function mkToggle(p,name,o,cfgK) local f=Instance.new("Frame") f.Parent=p f.BackgroundColor3=C.Bg f.BorderSizePixel=0 f.Size=UDim2.new(1,0,0,26) f.LayoutOrder=o rc(f) local lb=Instance.new("TextLabel",f) lb.BackgroundTransparency=1 lb.Position=UDim2.new(0,8,0,0) lb.Size=UDim2.new(1,-100,1,0) lb.Font=Enum.Font.Gotham lb.TextColor3=C.W lb.TextSize=11 lb.TextXAlignment=Enum.TextXAlignment.Left lb.Text=name local kl=Instance.new("TextLabel",f) kl.BackgroundTransparency=1 kl.Position=UDim2.new(1,-96,0,0) kl.Size=UDim2.new(0,46,1,0) kl.Font=Enum.Font.Gotham kl.TextColor3=C.D kl.TextSize=8 kl.TextXAlignment=Enum.TextXAlignment.Right local ks=cfgK and CFG[cfgK] or "" kl.Text=ks~="" and "["..ks.."]" or "" local b=Instance.new("TextButton",f) b.BackgroundColor3=C.Bg2 b.BorderSizePixel=0 b.Position=UDim2.new(1,-44,0,3) b.Size=UDim2.new(0,36,0,20) b.Font=Enum.Font.GothamBold b.TextColor3=C.D b.TextSize=9 b.Text="OFF" b.AutoButtonColor=false rc(b,4) local st=false local cb=nil local function tog() st=not st b.Text=st and "ON" or "OFF" TweenService:Create(b,TweenInfo.new(0.12),{BackgroundColor3=st and C.Ac or C.Bg2}):Play() b.TextColor3=st and C.W or C.D if cb then cb(st) end end b.MouseButton1Click:Connect(tog) local obj={set=function(s) if s~=st then tog() end end,get=function() return st end,on=function(c) cb=c end,toggle=tog,cfgKey=cfgK,updateKeyLabel=function() local k=cfgK and CFG[cfgK] or "" kl.Text=k~="" and "["..k.."]" or "" end} table.insert(allToggles,obj) return obj end
+
 local Main=Instance.new("Frame") Main.Parent=gui Main.Active=true Main.BackgroundColor3=C.Bg Main.BorderSizePixel=0 Main.AnchorPoint=Vector2.new(0.5,0.5) Main.Position=UDim2.new(0.5,0,0.5,0) Main.Size=UDim2.new(0,0,0,0) Main.ClipsDescendants=true rc(Main,10) Instance.new("UIStroke",Main).Color=C.Ac
 TweenService:Create(Main,TweenInfo.new(0.4,Enum.EasingStyle.Back),{Size=UDim2.new(0,380,0,470)}):Play() task.wait(0.3)
 
@@ -54,7 +54,6 @@ local xB=Instance.new("TextButton",Top) xB.BackgroundColor3=C.Bg2 xB.BorderSizeP
 local mBt=Instance.new("TextButton",Top) mBt.BackgroundColor3=C.Bg2 mBt.BorderSizePixel=0 mBt.Position=UDim2.new(1,-52,0,0) mBt.Size=UDim2.new(0,24,0,30) mBt.Font=Enum.Font.GothamBold mBt.Text="-" mBt.TextColor3=C.D mBt.TextSize=14 mBt.AutoButtonColor=false
 local mni=false mBt.MouseButton1Click:Connect(function() mni=not mni TweenService:Create(Main,TweenInfo.new(0.15),{Size=mni and UDim2.new(0,380,0,30) or UDim2.new(0,380,0,470)}):Play() mBt.Text=mni and "+" or "-" end)
 
--- 6 TABS COMME L'ORIGINAL
 local tabN={"Move","Combat","Players","Tools","Ext","Config"}
 local tbs,pgs={},{}
 local tabF=Instance.new("Frame",Main) tabF.BackgroundTransparency=1 tabF.Position=UDim2.new(0,4,0,33) tabF.Size=UDim2.new(1,-8,0,22)
@@ -67,7 +66,7 @@ local drag,ds,dp=false,nil,nil
 Top.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then drag=true ds=i.Position dp=Main.Position i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then drag=false end end) end end)
 UIS.InputChanged:Connect(function(i) if drag and(i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch)then local d=i.Position-ds Main.Position=UDim2.new(dp.X.Scale,dp.X.Offset+d.X,dp.Y.Scale,dp.Y.Offset+d.Y) end end)
 
--- ═══ MOVE TAB ═══
+-- MOVE TAB
 local mvP=Instance.new("Frame",Main) mvP.BackgroundTransparency=1 mvP.Position=UDim2.new(0,0,0,cY) mvP.Size=UDim2.new(1,0,1,-cY) mvP.Visible=true pgs["Move"]=mvP
 local mvS=mscr(mvP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
 lbl(mvS,"MOVEMENT",1) local tFly=mkToggle(mvS,"Fly",2,"flyKey") local sFlySpd=mkSlider(mvS,"Fly Speed",10,300,80,3) local tNoclip=mkToggle(mvS,"Noclip",4,"noclipKey") local tInfJ=mkToggle(mvS,"Infinite Jump",5,"infJumpKey") local sSpd=mkSlider(mvS,"WalkSpeed",16,500,16,6) local tSpin=mkToggle(mvS,"Spin",7) local sSpinSpd=mkSlider(mvS,"Spin Speed",1,100,20,8)
@@ -81,41 +80,54 @@ local tpY=Instance.new("TextBox",tpFrame) tpY.BackgroundColor3=C.Bg2 tpY.BorderS
 local tpZ=Instance.new("TextBox",tpFrame) tpZ.BackgroundColor3=C.Bg2 tpZ.BorderSizePixel=0 tpZ.Position=UDim2.new(0.5,2,0,18) tpZ.Size=UDim2.new(0.25,-4,0,26) tpZ.Font=Enum.Font.Gotham tpZ.PlaceholderText="Z" tpZ.PlaceholderColor3=C.D tpZ.Text="" tpZ.TextColor3=C.W tpZ.TextSize=11 rc(tpZ,4)
 local tpGo=Instance.new("TextButton",tpFrame) tpGo.BackgroundColor3=C.Ac tpGo.BorderSizePixel=0 tpGo.Position=UDim2.new(0.75,2,0,18) tpGo.Size=UDim2.new(0.25,-2,0,26) tpGo.Font=Enum.Font.GothamBold tpGo.Text="TP" tpGo.TextColor3=C.W tpGo.TextSize=11 tpGo.AutoButtonColor=false rc(tpGo,4) hfx(tpGo,C.Ac,C.AcH)
 tpGo.MouseButton1Click:Connect(function() pcall(function() local hrp=ghrp() if hrp then hrp.CFrame=CFrame.new(tonumber(tpX.Text)or 0,tonumber(tpY.Text)or 0,tonumber(tpZ.Text)or 0) end end) end)
--- COPIER POSITION
 local tpCopy=mkb(mvS,"Copier ma position",C.Bg) tpCopy.LayoutOrder=16 tpCopy.Font=Enum.Font.Gotham tpCopy.TextSize=10 hfx(tpCopy,C.Bg,C.Ac)
 tpCopy.MouseButton1Click:Connect(function() pcall(function() local hrp=ghrp() if hrp then local p=hrp.Position tpX.Text=tostring(math.floor(p.X)) tpY.Text=tostring(math.floor(p.Y)) tpZ.Text=tostring(math.floor(p.Z)) pcall(function() if setclipboard then setclipboard(math.floor(p.X)..","..math.floor(p.Y)..","..math.floor(p.Z)) end end) end end) end)
 
--- ═══ COMBAT TAB ═══
+-- COMBAT TAB
 local cbP=Instance.new("Frame",Main) cbP.BackgroundTransparency=1 cbP.Position=UDim2.new(0,0,0,cY) cbP.Size=UDim2.new(1,0,1,-cY) cbP.Visible=false pgs["Combat"]=cbP
 local cbS=mscr(cbP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
 lbl(cbS,"DEFENSE",1) local tGod=mkToggle(cbS,"God Mode",2,"godKey") local tAntiVoid=mkToggle(cbS,"Anti Void",3,"antiVoidKey")
 sep(cbS,4) lbl(cbS,"HITBOX",5) local tHitbox=mkToggle(cbS,"Hitbox Expander",6) local sHitbox=mkSlider(cbS,"Hitbox Size",1,20,5,7)
 sep(cbS,8) lbl(cbS,"AIM & CLICK",9)
--- AIMBOT PANEL BUTTON
-local aimOpenBtn=mkb(cbS,"Aimbot / AutoClick Settings",C.Bg) aimOpenBtn.LayoutOrder=10 aimOpenBtn.Font=Enum.Font.GothamBold hfx(aimOpenBtn,C.Bg,C.Ac)
+local aimOpenBtn=mkb(cbS,"Aimbot Settings",C.Bg) aimOpenBtn.LayoutOrder=10 aimOpenBtn.Font=Enum.Font.GothamBold hfx(aimOpenBtn,C.Bg,C.Ac)
+local clickOpenBtn=mkb(cbS,"AutoClick Settings",C.Bg) clickOpenBtn.LayoutOrder=11 clickOpenBtn.Font=Enum.Font.GothamBold hfx(clickOpenBtn,C.Bg,C.Ac)
+
 -- AIMBOT PANEL
-local aimPanel=Instance.new("Frame") aimPanel.Parent=gui aimPanel.BackgroundColor3=C.Bg aimPanel.BorderSizePixel=0 aimPanel.AnchorPoint=Vector2.new(0.5,0.5) aimPanel.Position=UDim2.new(0.5,200,0.5,0) aimPanel.Size=UDim2.new(0,0,0,0) aimPanel.ClipsDescendants=true aimPanel.Visible=false aimPanel.Active=true rc(aimPanel,10) Instance.new("UIStroke",aimPanel).Color=C.Ac
+local aimPanel=Instance.new("Frame") aimPanel.Parent=gui aimPanel.BackgroundColor3=C.Bg aimPanel.BorderSizePixel=0 aimPanel.AnchorPoint=Vector2.new(0.5,0.5) aimPanel.Position=UDim2.new(0.5,200,0.5,-80) aimPanel.Size=UDim2.new(0,0,0,0) aimPanel.ClipsDescendants=true aimPanel.Visible=false aimPanel.Active=true rc(aimPanel,10) Instance.new("UIStroke",aimPanel).Color=C.Ac
 local aimTop=Instance.new("Frame",aimPanel) aimTop.BackgroundColor3=C.Bg2 aimTop.BorderSizePixel=0 aimTop.Size=UDim2.new(1,0,0,28) rc(aimTop,10)
-local aimTtl=Instance.new("TextLabel",aimTop) aimTtl.BackgroundTransparency=1 aimTtl.Position=UDim2.new(0,10,0,0) aimTtl.Size=UDim2.new(1,-40,1,0) aimTtl.Font=Enum.Font.GothamBold aimTtl.Text="Aim Settings" aimTtl.TextColor3=C.W aimTtl.TextSize=11 aimTtl.TextXAlignment=Enum.TextXAlignment.Left
+local aimTtl=Instance.new("TextLabel",aimTop) aimTtl.BackgroundTransparency=1 aimTtl.Position=UDim2.new(0,10,0,0) aimTtl.Size=UDim2.new(1,-40,1,0) aimTtl.Font=Enum.Font.GothamBold aimTtl.Text="Aimbot" aimTtl.TextColor3=C.W aimTtl.TextSize=11 aimTtl.TextXAlignment=Enum.TextXAlignment.Left
 local aimX=Instance.new("TextButton",aimTop) aimX.BackgroundColor3=C.Bg2 aimX.BorderSizePixel=0 aimX.Position=UDim2.new(1,-26,0,0) aimX.Size=UDim2.new(0,26,0,28) aimX.Font=Enum.Font.GothamBold aimX.Text="X" aimX.TextColor3=C.D aimX.TextSize=10 aimX.AutoButtonColor=false rc(aimX,6) hfx(aimX,C.Bg2,C.R)
 local aimScr=mscr(aimPanel,UDim2.new(0,4,0,32),UDim2.new(1,-8,1,-36))
 local tAimbot=mkToggle(aimScr,"Aimbot",1)
 local aimI=Instance.new("TextLabel",aimScr) aimI.BackgroundColor3=C.Bg aimI.Size=UDim2.new(1,0,0,20) aimI.LayoutOrder=2 aimI.Font=Enum.Font.Gotham aimI.TextColor3=C.D aimI.TextSize=9 aimI.Text="  Clic droit = viser tete la plus proche" aimI.TextXAlignment=Enum.TextXAlignment.Left rc(aimI)
-sep(aimScr,3) lbl(aimScr,"AUTO CLICK",4)
-local tAutoClick=mkToggle(aimScr,"Auto Click",5)
-local sClickSpd=mkSlider(aimScr,"Click Speed (ms)",10,500,50,6)
-local clkI=Instance.new("TextLabel",aimScr) clkI.BackgroundColor3=C.Bg clkI.Size=UDim2.new(1,0,0,20) clkI.LayoutOrder=7 clkI.Font=Enum.Font.Gotham clkI.TextColor3=C.D clkI.TextSize=9 clkI.Text="  Clic auto position souris" clkI.TextXAlignment=Enum.TextXAlignment.Left rc(clkI)
+local aimI2=Instance.new("TextLabel",aimScr) aimI2.BackgroundColor3=C.Bg aimI2.Size=UDim2.new(1,0,0,20) aimI2.LayoutOrder=3 aimI2.Font=Enum.Font.Gotham aimI2.TextColor3=C.D aimI2.TextSize=9 aimI2.Text="  Snap automatique sur la tete" aimI2.TextXAlignment=Enum.TextXAlignment.Left rc(aimI2)
 local aimPO=false
-local function toggleAim() aimPO=not aimPO if aimPO then aimPanel.Visible=true TweenService:Create(aimPanel,TweenInfo.new(0.3,Enum.EasingStyle.Back),{Size=UDim2.new(0,240,0,260)}):Play() else TweenService:Create(aimPanel,TweenInfo.new(0.2,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.25) aimPanel.Visible=false end end
+local function toggleAim() aimPO=not aimPO if aimPO then aimPanel.Visible=true TweenService:Create(aimPanel,TweenInfo.new(0.3,Enum.EasingStyle.Back),{Size=UDim2.new(0,240,0,160)}):Play() else TweenService:Create(aimPanel,TweenInfo.new(0.2,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.25) aimPanel.Visible=false end end
 aimOpenBtn.MouseButton1Click:Connect(toggleAim) aimX.MouseButton1Click:Connect(toggleAim)
--- AIM PANEL DRAG
 local aimDr,aimDS,aimDP=false,nil,nil
 aimTop.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then aimDr=true aimDS=i.Position aimDP=aimPanel.Position i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then aimDr=false end end) end end)
 UIS.InputChanged:Connect(function(i) if aimDr and(i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch)then local d=i.Position-aimDS aimPanel.Position=UDim2.new(aimDP.X.Scale,aimDP.X.Offset+d.X,aimDP.Y.Scale,aimDP.Y.Offset+d.Y) end end)
 
-sep(cbS,11) lbl(cbS,"VISUALS",12) local tESP=mkToggle(cbS,"ESP",13,"espKey") local tFullbright=mkToggle(cbS,"Fullbright",14,"fullbrightKey") local tNoFog=mkToggle(cbS,"No Fog",15,"noFogKey")
-sep(cbS,16) lbl(cbS,"AC BYPASS",17) local tAdonis=mkToggle(cbS,"AC Bypass",18)
-sep(cbS,19) lbl(cbS,"MISC",20) local tAntiAfk=mkToggle(cbS,"Anti AFK",21,"antiAfkKey") local tAntiSlow=mkToggle(cbS,"Anti Slowdown",22,"antiSlowKey")-- ═══ PLAYERS TAB ═══
+-- AUTOCLICK PANEL
+local clickPanel=Instance.new("Frame") clickPanel.Parent=gui clickPanel.BackgroundColor3=C.Bg clickPanel.BorderSizePixel=0 clickPanel.AnchorPoint=Vector2.new(0.5,0.5) clickPanel.Position=UDim2.new(0.5,200,0.5,80) clickPanel.Size=UDim2.new(0,0,0,0) clickPanel.ClipsDescendants=true clickPanel.Visible=false clickPanel.Active=true rc(clickPanel,10) Instance.new("UIStroke",clickPanel).Color=C.Ac
+local clickTop=Instance.new("Frame",clickPanel) clickTop.BackgroundColor3=C.Bg2 clickTop.BorderSizePixel=0 clickTop.Size=UDim2.new(1,0,0,28) rc(clickTop,10)
+local clickTtl=Instance.new("TextLabel",clickTop) clickTtl.BackgroundTransparency=1 clickTtl.Position=UDim2.new(0,10,0,0) clickTtl.Size=UDim2.new(1,-40,1,0) clickTtl.Font=Enum.Font.GothamBold clickTtl.Text="AutoClick" clickTtl.TextColor3=C.W clickTtl.TextSize=11 clickTtl.TextXAlignment=Enum.TextXAlignment.Left
+local clickXBtn=Instance.new("TextButton",clickTop) clickXBtn.BackgroundColor3=C.Bg2 clickXBtn.BorderSizePixel=0 clickXBtn.Position=UDim2.new(1,-26,0,0) clickXBtn.Size=UDim2.new(0,26,0,28) clickXBtn.Font=Enum.Font.GothamBold clickXBtn.Text="X" clickXBtn.TextColor3=C.D clickXBtn.TextSize=10 clickXBtn.AutoButtonColor=false rc(clickXBtn,6) hfx(clickXBtn,C.Bg2,C.R)
+local clickScr=mscr(clickPanel,UDim2.new(0,4,0,32),UDim2.new(1,-8,1,-36))
+local tAutoClick=mkToggle(clickScr,"Auto Click",1)
+local sClickSpd=mkSlider(clickScr,"Click Speed (ms)",10,500,50,2)
+local clkI=Instance.new("TextLabel",clickScr) clkI.BackgroundColor3=C.Bg clkI.Size=UDim2.new(1,0,0,20) clkI.LayoutOrder=3 clkI.Font=Enum.Font.Gotham clkI.TextColor3=C.D clkI.TextSize=9 clkI.Text="  Clic auto position souris" clkI.TextXAlignment=Enum.TextXAlignment.Left rc(clkI)
+local clkI2=Instance.new("TextLabel",clickScr) clkI2.BackgroundColor3=C.Bg clkI2.Size=UDim2.new(1,0,0,20) clkI2.LayoutOrder=4 clkI2.Font=Enum.Font.Gotham clkI2.TextColor3=C.D clkI2.TextSize=9 clkI2.Text="  Vitesse reglable avec le slider" clkI2.TextXAlignment=Enum.TextXAlignment.Left rc(clkI2)
+local clickPO=false
+local function toggleClick() clickPO=not clickPO if clickPO then clickPanel.Visible=true TweenService:Create(clickPanel,TweenInfo.new(0.3,Enum.EasingStyle.Back),{Size=UDim2.new(0,240,0,180)}):Play() else TweenService:Create(clickPanel,TweenInfo.new(0.2,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.25) clickPanel.Visible=false end end
+clickOpenBtn.MouseButton1Click:Connect(toggleClick) clickXBtn.MouseButton1Click:Connect(toggleClick)
+local clickDr,clickDS,clickDP=false,nil,nil
+clickTop.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then clickDr=true clickDS=i.Position clickDP=clickPanel.Position i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then clickDr=false end end) end end)
+UIS.InputChanged:Connect(function(i) if clickDr and(i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch)then local d=i.Position-clickDS clickPanel.Position=UDim2.new(clickDP.X.Scale,clickDP.X.Offset+d.X,clickDP.Y.Scale,clickDP.Y.Offset+d.Y) end end)
+
+sep(cbS,12) lbl(cbS,"VISUALS",13) local tESP=mkToggle(cbS,"ESP",14,"espKey") local tFullbright=mkToggle(cbS,"Fullbright",15,"fullbrightKey") local tNoFog=mkToggle(cbS,"No Fog",16,"noFogKey")
+sep(cbS,17) lbl(cbS,"AC BYPASS",18) local tAdonis=mkToggle(cbS,"AC Bypass",19)
+sep(cbS,20) lbl(cbS,"MISC",21) local tAntiAfk=mkToggle(cbS,"Anti AFK",22,"antiAfkKey") local tAntiSlow=mkToggle(cbS,"Anti Slowdown",23,"antiSlowKey")-- PLAYERS TAB
 local selPlayer=nil
 local jP=Instance.new("Frame",Main) jP.BackgroundTransparency=1 jP.Position=UDim2.new(0,0,0,cY) jP.Size=UDim2.new(1,0,1,-cY) jP.Visible=false pgs["Players"]=jP
 local jSt=Instance.new("TextLabel",jP) jSt.BackgroundColor3=C.Bg2 jSt.BorderSizePixel=0 jSt.Position=UDim2.new(0,4,0,0) jSt.Size=UDim2.new(1,-8,0,20) jSt.Font=Enum.Font.GothamBold jSt.Text="Idle" jSt.TextColor3=C.D jSt.TextSize=10 rc(jSt)
@@ -127,13 +139,13 @@ local jSearch=Instance.new("TextBox",jP) jSearch.BackgroundColor3=C.Bg2 jSearch.
 local jScr=mscr(jP,UDim2.new(0,4,0,80),UDim2.new(1,-8,1,-116))
 local jRef=mkb(jP,"Actualiser",C.Ac) jRef.Position=UDim2.new(0,4,1,-32) jRef.Size=UDim2.new(1,-8,0,28) jRef.Font=Enum.Font.GothamBold hfx(jRef,C.Ac,C.AcH)
 
--- ═══ TOOLS TAB ═══
+-- TOOLS TAB
 local oP=Instance.new("Frame",Main) oP.BackgroundTransparency=1 oP.Position=UDim2.new(0,0,0,cY) oP.Size=UDim2.new(1,0,1,-cY) oP.Visible=false pgs["Tools"]=oP
 local oSr=Instance.new("TextBox",oP) oSr.BackgroundColor3=C.Bg2 oSr.BorderSizePixel=0 oSr.Position=UDim2.new(0,4,0,0) oSr.Size=UDim2.new(1,-8,0,24) oSr.Font=Enum.Font.Gotham oSr.PlaceholderText="Rechercher..." oSr.PlaceholderColor3=C.D oSr.Text="" oSr.TextColor3=C.W oSr.TextSize=11 oSr.ClearTextOnFocus=false rc(oSr)
 local oScr=mscr(oP,UDim2.new(0,4,0,28),UDim2.new(1,-8,1,-64))
 local oRf=mkb(oP,"Actualiser",C.Ac) oRf.Position=UDim2.new(0,4,1,-32) oRf.Size=UDim2.new(1,-8,0,28) oRf.Font=Enum.Font.GothamBold hfx(oRf,C.Ac,C.AcH)
 
--- ═══ EXT TAB ═══
+-- EXT TAB
 local extP=Instance.new("Frame",Main) extP.BackgroundTransparency=1 extP.Position=UDim2.new(0,0,0,cY) extP.Size=UDim2.new(1,0,1,-cY) extP.Visible=false pgs["Ext"]=extP
 local extS=mscr(extP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
 lbl(extS,"SCRIPTS",1)
@@ -157,7 +169,7 @@ local extCode=Instance.new("TextBox",extCF) extCode.BackgroundColor3=C.Bg2 extCo
 local extExec=Instance.new("TextButton",extCF) extExec.BackgroundColor3=C.Ac extExec.BorderSizePixel=0 extExec.Position=UDim2.new(0,0,0,54) extExec.Size=UDim2.new(1,0,0,26) extExec.Font=Enum.Font.GothamBold extExec.Text="Executer" extExec.TextColor3=C.W extExec.TextSize=11 extExec.AutoButtonColor=false rc(extExec,4) hfx(extExec,C.Ac,C.AcH)
 extExec.MouseButton1Click:Connect(function() local code=extCode.Text if code=="" then return end extExec.Text="..." task.spawn(function() local ok=pcall(function() loadstring(code)() end) extExec.Text=ok and "OK" or "Erreur" task.wait(2) extExec.Text="Executer" end) end)
 
--- ═══ CONFIG TAB ═══
+-- CONFIG TAB
 local cfP=Instance.new("Frame",Main) cfP.BackgroundTransparency=1 cfP.Position=UDim2.new(0,0,0,cY) cfP.Size=UDim2.new(1,0,1,-cY) cfP.Visible=false pgs["Config"]=cfP
 local cfS=mscr(cfP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
 lbl(cfS,"KEYBINDS",1)
@@ -171,16 +183,16 @@ cBtn("Reset Character",16).MouseButton1Click:Connect(function() pcall(function()
 cBtn("Server Hop",17).MouseButton1Click:Connect(function() pcall(function() local d=HS:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100")) for _,s in ipairs(d.data) do if s.id~=game.JobId and s.playing<s.maxPlayers then TS:TeleportToPlaceInstance(game.PlaceId,s.id,lp) break end end end) end)
 cBtn("Copy Place ID",18).MouseButton1Click:Connect(function() pcall(function() setclipboard(tostring(game.PlaceId)) end) end)
 cBtn("Anti Lag",19).MouseButton1Click:Connect(function() pcall(function() for _,v in ipairs(WS:GetDescendants()) do pcall(function() if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") or v:IsA("Explosion") then v:Destroy() end if v:IsA("Decal") or v:IsA("Texture") then v.Transparency=1 end end) end for _,v in ipairs(Lighting:GetDescendants()) do pcall(function() if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") then v:Destroy() end end) end pcall(function() settings().Rendering.QualityLevel=Enum.QualityLevel.Level01 end) Lighting.GlobalShadows=false Lighting.FogEnd=1e9 pcall(function() if setfpscap then setfpscap(60) end end) game:GetService("StarterGui"):SetCore("SendNotification",{Title="Anti Lag",Text="Applique",Duration=2}) end) end)
-cBtn("Destroy GUI",20,C.R).MouseButton1Click:Connect(function() TweenService:Create(Main,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.35) gui:Destroy() end)-- ═══ TOOLS LOGIC ═══
+cBtn("Destroy GUI",20,C.R).MouseButton1Click:Connect(function() TweenService:Create(Main,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.35) gui:Destroy() end)-- TOOLS LOGIC
 local function fTools() local t,seen={},{} local function addT(v,tag) if v:IsA("Tool") and v.Parent and v.Parent~=lp.Backpack and v.Parent~=gc() then local k=tostring(v)..v.Name if not seen[k] then seen[k]=true table.insert(t,{T=v,S=tag}) end end end local function scan(loc,tag) pcall(function() for _,v in ipairs(loc:GetDescendants()) do pcall(function() addT(v,tag) end) end end) end scan(WS,"WS") scan(RS,"RS") pcall(function() scan(game:GetService("StarterPack"),"SP") end) pcall(function() scan(Lighting,"LT") end) pcall(function() if getnilinstances then for _,v in ipairs(getnilinstances()) do pcall(function() if v:IsA("Tool") then local k=tostring(v)..v.Name.."nil" if not seen[k] then seen[k]=true table.insert(t,{T=v,S="Nil"}) end end end) end end end) return t end
 local function rTools() for _,v in ipairs(oScr:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end local tools=fTools() local s=oSr.Text:lower() local dp={} for _,data in ipairs(tools) do pcall(function() local n=data.T.Name local key=n.."_"..data.S if not dp[key] and(s=="" or n:lower():find(s,1,true)) then dp[key]=true local b=mkb(oScr,n.." ["..data.S.."]",C.Bg) hfx(b,C.Bg,C.Ac) b.MouseButton1Click:Connect(function() pcall(function() data.T:Clone().Parent=lp.Backpack end) end) end end) end end
 oRf.MouseButton1Click:Connect(rTools) oSr:GetPropertyChangedSignal("Text"):Connect(rTools) task.defer(rTools)
 
--- ═══ AC BYPASS ═══
+-- AC BYPASS
 tAdonis.on(function(s) if s then pcall(function() for _,v in ipairs(game:GetDescendants()) do pcall(function() local n=v.Name:lower() if(v:IsA("LocalScript") or v:IsA("ModuleScript")) and(n:find("anticheat") or n:find("anti_cheat") or n:find("cheatdetect") or n:find("ac_") or n:find("detection")) then v.Disabled=true end end) end end) pcall(function() if getconnections then for _,c in ipairs(getconnections(lp.Idled)) do c:Disable() end end end) game:GetService("StarterGui"):SetCore("SendNotification",{Title="AC Bypass",Text="Applique",Duration=2}) end end)
 
--- ═══ FLING ENGINE ═══
-local FL={busy=false,allOn=false,stopFlag=false,touchOn=false,followOn=false,followTarget=nil,bangOn=false,bangTarget=nil,bangSavedPos=nil,savedFPDH=nil}
+-- FLING ENGINE
+local FL={busy=false,allOn=false,stopFlag=false,touchOn=false,followOn=false,followTarget=nil,savedFPDH=nil}
 pcall(function() FL.savedFPDH=WS.FallenPartsDestroyHeight end)
 local function SkidFling(TP) if FL.busy or FL.stopFlag then return end local Ch=gc() local Hum=Ch and Ch:FindFirstChildOfClass("Humanoid") local RP=Hum and Hum.RootPart if not Ch or not Hum or not RP or Hum.Health<=0 then return end local TC=TP.Character if not TC then return end local TH=TC:FindFirstChildOfClass("Humanoid") if not TH or TH.Health<=0 then return end local TR=TH.RootPart local THd=TC:FindFirstChild("Head") FL.busy=true local Old=RP.CFrame
     local FP=function(B,P,A) if FL.stopFlag then return end RP.CFrame=CFrame.new(B.Position)*P*A pcall(function() Ch:SetPrimaryPartCFrame(CFrame.new(B.Position)*P*A) end) RP.Velocity=Vector3.new(9e7,9e7*10,9e7) RP.RotVelocity=Vector3.new(9e8,9e8,9e8) end
@@ -194,23 +206,22 @@ local function SkidFling(TP) if FL.busy or FL.stopFlag then return end local Ch=
 function FL.flingOne(t) if t==lp then return end FL.stopFlag=false jSt.Text="Fling: "..t.Name jSt.TextColor3=C.W task.spawn(function() SkidFling(t) if not FL.allOn then jSt.Text="Idle" jSt.TextColor3=C.D end end) end
 function FL.flingAll() if FL.allOn then FL.allOn=false FL.stopFlag=true jBO["All"].Text="Fling All" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Idle" jSt.TextColor3=C.D return end FL.allOn=true FL.stopFlag=false jBO["All"].Text="Stop" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.R}):Play() task.spawn(function() while FL.allOn and not FL.stopFlag do local tg={} for _,p in ipairs(Players:GetPlayers()) do if p~=lp and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then local h=p.Character:FindFirstChildOfClass("Humanoid") if h and h.Health>0 then table.insert(tg,p) end end end if #tg==0 then FL.allOn=false jBO["All"].Text="Fling All" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Personne" jSt.TextColor3=C.D return end for _,t in ipairs(tg) do if not FL.allOn or FL.stopFlag then return end jSt.Text="All: "..t.Name jSt.TextColor3=C.W SkidFling(t) if not FL.allOn or FL.stopFlag then return end task.wait(0.5) end end end) end
 function FL.touchFling() if FL.touchOn then FL.touchOn=false jBO["Touch"].Text="Touch" TweenService:Create(jBO["Touch"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() jSt.Text="Idle" jSt.TextColor3=C.D return end local hrp=ghrp() if not hrp then return end FL.touchOn=true jBO["Touch"].Text="Stop" TweenService:Create(jBO["Touch"],TweenInfo.new(0.1),{BackgroundColor3=C.R}):Play() jSt.Text="Touch Fling" jSt.TextColor3=C.W task.spawn(function() local ml=0.1 while FL.touchOn do RunService.Heartbeat:Wait() local c=gc() local h=c and c:FindFirstChild("HumanoidRootPart") while FL.touchOn and not(c and c.Parent and h and h.Parent) do RunService.Heartbeat:Wait() c=gc() h=c and c:FindFirstChild("HumanoidRootPart") end if FL.touchOn and h and h.Parent then local v=h.Velocity h.Velocity=v*10000+Vector3.new(0,10000,0) RunService.RenderStepped:Wait() if c and c.Parent and h and h.Parent then h.Velocity=v end RunService.Stepped:Wait() if c and c.Parent and h and h.Parent then h.Velocity=v+Vector3.new(0,ml,0) ml=ml*-1 end end end end) end
-function FL.follow(t) if FL.followOn and FL.followTarget==t then FL.followOn=false FL.followTarget=nil jSt.Text="Idle" jSt.TextColor3=C.D return end if FL.bangOn then FL.bangOn=false FL.bangTarget=nil if FL.bangSavedPos then pcall(function() local hrp=ghrp() if hrp then hrp.CFrame=FL.bangSavedPos hrp.Velocity=Vector3.zero hrp.RotVelocity=Vector3.zero end end) FL.bangSavedPos=nil end end FL.followOn=true FL.followTarget=t jSt.Text="Follow: "..t.Name jSt.TextColor3=C.W task.spawn(function() while FL.followOn and FL.followTarget==t do local hrp=ghrp() local th=t.Character and t.Character:FindFirstChild("HumanoidRootPart") if hrp and th and(th.Position-hrp.Position).Magnitude>5 then hrp.CFrame=CFrame.new(hrp.Position,th.Position)*CFrame.new(0,0,-3) pcall(function() ghum():MoveTo(th.Position) end) end task.wait(0.1) end end) end
-function FL.bang(t) if FL.bangOn and FL.bangTarget==t then FL.bangOn=false FL.bangTarget=nil jSt.Text="Idle" jSt.TextColor3=C.D if FL.bangSavedPos then pcall(function() local hrp=ghrp() if hrp then hrp.CFrame=FL.bangSavedPos task.wait(0.1) hrp.Velocity=Vector3.zero hrp.RotVelocity=Vector3.zero end end) FL.bangSavedPos=nil end return end if FL.followOn then FL.followOn=false FL.followTarget=nil end FL.bangOn=true FL.bangTarget=t FL.bangSavedPos=ghrp() and ghrp().CFrame or nil jSt.Text="Bang: "..t.Name jSt.TextColor3=C.W task.spawn(function() local up=true while FL.bangOn and FL.bangTarget==t do local hrp=ghrp() local th=t.Character and t.Character:FindFirstChild("HumanoidRootPart") if hrp and th then hrp.CFrame=th.CFrame*(up and CFrame.new(0,0,-1.5) or CFrame.new(0,-1,-1.5)) up=not up end task.wait(0.15) end end) end
-function FL.stop() FL.allOn=false FL.stopFlag=true FL.touchOn=false FL.followOn=false FL.followTarget=nil FL.bangOn=false FL.bangTarget=nil if FL.bangSavedPos then pcall(function() local hrp=ghrp() if hrp then hrp.CFrame=FL.bangSavedPos hrp.Velocity=Vector3.zero hrp.RotVelocity=Vector3.zero end end) FL.bangSavedPos=nil end pcall(function() local hrp=ghrp() if hrp then for _,v in ipairs(hrp:GetChildren()) do if v:IsA("BodyMover") then v:Destroy() end end hrp.Velocity=Vector3.zero hrp.RotVelocity=Vector3.zero end local h=ghum() if h then h.PlatformStand=false end end) task.wait(0.3) FL.busy=false FL.stopFlag=false jSt.Text="Idle" jSt.TextColor3=C.D jBO["All"].Text="Fling All" jBO["Touch"].Text="Touch" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() TweenService:Create(jBO["Touch"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() end
+function FL.follow(t) if FL.followOn and FL.followTarget==t then FL.followOn=false FL.followTarget=nil jSt.Text="Idle" jSt.TextColor3=C.D return end FL.followOn=true FL.followTarget=t jSt.Text="Follow: "..t.Name jSt.TextColor3=C.W task.spawn(function() while FL.followOn and FL.followTarget==t do local hrp=ghrp() local th=t.Character and t.Character:FindFirstChild("HumanoidRootPart") if hrp and th and(th.Position-hrp.Position).Magnitude>5 then hrp.CFrame=CFrame.new(hrp.Position,th.Position)*CFrame.new(0,0,-3) pcall(function() ghum():MoveTo(th.Position) end) end task.wait(0.1) end end) end
+function FL.stop() FL.allOn=false FL.stopFlag=true FL.touchOn=false FL.followOn=false FL.followTarget=nil pcall(function() local hrp=ghrp() if hrp then for _,v in ipairs(hrp:GetChildren()) do if v:IsA("BodyMover") then v:Destroy() end end hrp.Velocity=Vector3.zero hrp.RotVelocity=Vector3.zero end local h=ghum() if h then h.PlatformStand=false end end) task.wait(0.3) FL.busy=false FL.stopFlag=false jSt.Text="Idle" jSt.TextColor3=C.D jBO["All"].Text="Fling All" jBO["Touch"].Text="Touch" TweenService:Create(jBO["All"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() TweenService:Create(jBO["Touch"],TweenInfo.new(0.1),{BackgroundColor3=C.Ac}):Play() end
 jBO["Stop"].MouseButton1Click:Connect(function() FL.stop() end)
 jBO["All"].MouseButton1Click:Connect(function() FL.flingAll() end)
 jBO["Touch"].MouseButton1Click:Connect(function() FL.touchFling() end)
 
--- ═══ PLAYER LIST (avec F, TP, Fw, Bg) ═══
+-- PLAYER LIST (F, TP, Fw — pas de Bg)
 local function rPlayers() for _,v in ipairs(jScr:GetChildren()) do if v:IsA("Frame") then v:Destroy() end end local search=jSearch.Text:lower() for _,p in ipairs(Players:GetPlayers()) do if p~=lp then local dn=p.DisplayName local un=p.Name if search=="" or dn:lower():find(search,1,true) or un:lower():find(search,1,true) then local row=Instance.new("Frame") row.Parent=jScr row.BackgroundColor3=C.Bg row.BorderSizePixel=0 row.Size=UDim2.new(1,0,0,28) rc(row)
-local nm=Instance.new("TextButton",row) nm.BackgroundTransparency=1 nm.Position=UDim2.new(0,4,0,0) nm.Size=UDim2.new(1,-164,1,0) nm.Font=Enum.Font.Gotham nm.TextColor3=C.W nm.TextSize=10 nm.TextXAlignment=Enum.TextXAlignment.Left nm.AutoButtonColor=false nm.Text=dn~=un and dn.." @"..un or un
+local nm=Instance.new("TextButton",row) nm.BackgroundTransparency=1 nm.Position=UDim2.new(0,4,0,0) nm.Size=UDim2.new(1,-134,1,0) nm.Font=Enum.Font.Gotham nm.TextColor3=C.W nm.TextSize=10 nm.TextXAlignment=Enum.TextXAlignment.Left nm.AutoButtonColor=false nm.Text=dn~=un and dn.." @"..un or un
 nm.MouseButton1Click:Connect(function() selPlayer=p pcall(function() cam.CameraSubject=p.Character:FindFirstChildOfClass("Humanoid") end) jSt.Text="Spec: "..dn jSt.TextColor3=C.D end)
-local bdata={{"F",function() FL.flingOne(p) end},{"TP",function() pcall(function() local hrp=ghrp() local th=p.Character and p.Character:FindFirstChild("HumanoidRootPart") if hrp and th then hrp.CFrame=th.CFrame*CFrame.new(3,0,0) end end) end},{"Fw",function() FL.follow(p) end},{"Bg",function() FL.bang(p) end}}
-for i,bd in ipairs(bdata) do local ab=Instance.new("TextButton",row) ab.BackgroundColor3=C.Ac ab.BorderSizePixel=0 ab.Position=UDim2.new(1,-(#bdata-i+1)*40,0,3) ab.Size=UDim2.new(0,38,0,22) ab.Font=Enum.Font.GothamBold ab.TextColor3=C.W ab.TextSize=9 ab.Text=bd[1] ab.AutoButtonColor=false rc(ab,4) hfx(ab,C.Ac,C.AcH) ab.MouseButton1Click:Connect(bd[2]) end
+local bdata={{"F",function() FL.flingOne(p) end},{"TP",function() pcall(function() local hrp=ghrp() local th=p.Character and p.Character:FindFirstChild("HumanoidRootPart") if hrp and th then hrp.CFrame=th.CFrame*CFrame.new(3,0,0) end end) end},{"Fw",function() FL.follow(p) end}}
+for i,bd in ipairs(bdata) do local ab=Instance.new("TextButton",row) ab.BackgroundColor3=C.Ac ab.BorderSizePixel=0 ab.Position=UDim2.new(1,-(#bdata-i+1)*40+2,0,3) ab.Size=UDim2.new(0,36,0,22) ab.Font=Enum.Font.GothamBold ab.TextColor3=C.W ab.TextSize=9 ab.Text=bd[1] ab.AutoButtonColor=false rc(ab,4) hfx(ab,C.Ac,C.AcH) ab.MouseButton1Click:Connect(bd[2]) end
 end end end end
 jRef.MouseButton1Click:Connect(rPlayers) jSearch:GetPropertyChangedSignal("Text"):Connect(rPlayers) task.defer(rPlayers) Players.PlayerAdded:Connect(function() task.wait(1) rPlayers() end) Players.PlayerRemoving:Connect(function() task.wait(0.5) rPlayers() end)
 
--- ═══ ALL LOGIC ═══
+-- ALL LOGIC
 local flying,ncOn=false,false local flyBV,flyBG,flyC,ncC,godC,espC,fcC,avoidC,slowC,fogC,brightC,hitboxC,spinC,aimC,clickC local keys={} local spdA=false local origFog,origAmb local fcYaw,fcPitch=0,0 local fcPos=Vector3.zero
 
 UIS.InputBegan:Connect(function(i,g) if not g and i.KeyCode then keys[i.KeyCode]=true local kn=i.KeyCode.Name if kn==CFG.toggleKey then Main.Visible=not Main.Visible end if CFG.flyKey~="" and kn==CFG.flyKey then tFly.toggle() end if CFG.noclipKey~="" and kn==CFG.noclipKey then tNoclip.toggle() end if CFG.freecamKey~="" and kn==CFG.freecamKey then tFreecam.toggle() end if CFG.godKey~="" and kn==CFG.godKey then tGod.toggle() end if CFG.espKey~="" and kn==CFG.espKey then tESP.toggle() end if CFG.touchFlingKey~="" and kn==CFG.touchFlingKey then FL.touchFling() end if CFG.flingAllKey~="" and kn==CFG.flingAllKey then FL.flingAll() end end end)
@@ -236,7 +247,4 @@ tFreecam.on(function(s) if fcC then fcC:Disconnect() fcC=nil end if s then pcall
 sSpd.cb=function(v) spdA=v~=16 pcall(function() ghum().WalkSpeed=v end) end
 sFov.cb=function(v) pcall(function() cam.FieldOfView=v end) end
 RunService.Heartbeat:Connect(function() pcall(function() local h=ghum() if h and not tFreecam.get() then if spdA then h.WalkSpeed=sSpd.val end end end) end)
-lp.CharacterAdded:Connect(function() if flying then tFly.set(false) end if ncOn then tNoclip.set(false) end if tFreecam.get() then tFreecam.set(false) end if tSpin.get() then tSpin.set(false) end FL.stop() task.wait(2) FL.busy=false end)
-
-stab("Move")
-game:GetService("StarterGui"):SetCore("SendNotification",{Title="Avocat Hub",Text="V1.0 charge",Duration=3})
+lp.CharacterAdded:Connect(function() if flying then tFly.set(false) end 
