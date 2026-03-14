@@ -247,4 +247,7 @@ tFreecam.on(function(s) if fcC then fcC:Disconnect() fcC=nil end if s then pcall
 sSpd.cb=function(v) spdA=v~=16 pcall(function() ghum().WalkSpeed=v end) end
 sFov.cb=function(v) pcall(function() cam.FieldOfView=v end) end
 RunService.Heartbeat:Connect(function() pcall(function() local h=ghum() if h and not tFreecam.get() then if spdA then h.WalkSpeed=sSpd.val end end end) end)
-lp.CharacterAdded:Connect(function() if flying then tFly.set(false) end 
+lp.CharacterAdded:Connect(function() if flying then tFly.set(false) end if ncOn then tNoclip.set(false) end if tFreecam.get() then tFreecam.set(false) end if tSpin.get() then tSpin.set(false) end FL.stop() task.wait(2) FL.busy=false end)
+
+stab("Move")
+game:GetService("StarterGui"):SetCore("SendNotification",{Title="Avocat Hub",Text="V1.0 charge",Duration=3})
