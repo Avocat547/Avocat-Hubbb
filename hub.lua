@@ -166,8 +166,73 @@ end)
 sep(cbS,23)
 lbl(cbS,"MISC",24)
 local tAntiAfk=mkToggle(cbS,"Anti AFK",25,"antiAfkKey")
-local tAntiSlow=mkToggle(cbS,"Anti Slowdown",26,"antiSlowKey")
-local tAntiSlow=mkToggle(cbS,"Anti Slowdown",26,"antiSlowKey")-- TOOLS LOGIC
+local tAntiSlow=mkToggle(cbS,"Anti Slowdown",26,"antiSlowKey")-- PLAYERS TAB
+local jP=Instance.new("Frame",Main) jP.BackgroundTransparency=1 jP.Position=UDim2.new(0,0,0,cY) jP.Size=UDim2.new(1,0,1,-cY) jP.Visible=false pgs["Players"]=jP
+local jSt=Instance.new("TextLabel",jP) jSt.BackgroundColor3=C.Bg2 jSt.BorderSizePixel=0 jSt.Position=UDim2.new(0,4,0,0) jSt.Size=UDim2.new(1,-8,0,20) jSt.Font=Enum.Font.GothamBold jSt.Text="Idle" jSt.TextColor3=C.D jSt.TextSize=10 rc(jSt)
+local jAf=Instance.new("Frame",jP) jAf.BackgroundTransparency=1 jAf.Position=UDim2.new(0,4,0,24) jAf.Size=UDim2.new(1,-8,0,26)
+local jBN={"Stop","All","Touch","Follow","Bang","Unspec"} local jBO={}
+for i,n in ipairs(jBN) do local b=mkb(jAf,n,n=="Stop" and C.R or C.Ac) b.Position=UDim2.new((i-1)/#jBN,1,0,0) b.Size=UDim2.new(1/#jBN,-2,1,0) b.Font=Enum.Font.GothamBold b.TextSize=8 hfx(b,n=="Stop" and C.R or C.Ac,n=="Stop" and C.RH or C.AcH) jBO[n]=b end
+local jSearch=Instance.new("TextBox",jP) jSearch.BackgroundColor3=C.Bg2 jSearch.BorderSizePixel=0 jSearch.Position=UDim2.new(0,4,0,54) jSearch.Size=UDim2.new(1,-8,0,22) jSearch.Font=Enum.Font.Gotham jSearch.PlaceholderText="Rechercher joueur..." jSearch.PlaceholderColor3=C.D jSearch.Text="" jSearch.TextColor3=C.W jSearch.TextSize=10 jSearch.ClearTextOnFocus=false rc(jSearch)
+local jScr=mscr(jP,UDim2.new(0,4,0,80),UDim2.new(1,-8,1,-116))
+local jRef=mkb(jP,"Actualiser",C.Ac) jRef.Position=UDim2.new(0,4,1,-32) jRef.Size=UDim2.new(1,-8,0,28) jRef.Font=Enum.Font.GothamBold hfx(jRef,C.Ac,C.AcH)
+jBO["Unspec"].MouseButton1Click:Connect(function() pcall(function() cam.CameraSubject=gc():FindFirstChildOfClass("Humanoid") end) jSt.Text="Idle" jSt.TextColor3=C.D end)
+
+-- TOOLS TAB
+local oP=Instance.new("Frame",Main) oP.BackgroundTransparency=1 oP.Position=UDim2.new(0,0,0,cY) oP.Size=UDim2.new(1,0,1,-cY) oP.Visible=false pgs["Tools"]=oP
+local oSr=Instance.new("TextBox",oP) oSr.BackgroundColor3=C.Bg2 oSr.BorderSizePixel=0 oSr.Position=UDim2.new(0,4,0,0) oSr.Size=UDim2.new(1,-8,0,24) oSr.Font=Enum.Font.Gotham oSr.PlaceholderText="Rechercher..." oSr.PlaceholderColor3=C.D oSr.Text="" oSr.TextColor3=C.W oSr.TextSize=11 oSr.ClearTextOnFocus=false rc(oSr)
+local oScr=mscr(oP,UDim2.new(0,4,0,28),UDim2.new(1,-8,1,-64))
+local oRf=mkb(oP,"Actualiser",C.Ac) oRf.Position=UDim2.new(0,4,1,-32) oRf.Size=UDim2.new(1,-8,0,28) oRf.Font=Enum.Font.GothamBold hfx(oRf,C.Ac,C.AcH)
+
+-- EXT TAB
+local extP=Instance.new("Frame",Main) extP.BackgroundTransparency=1 extP.Position=UDim2.new(0,0,0,cY) extP.Size=UDim2.new(1,0,1,-cY) extP.Visible=false pgs["Ext"]=extP
+local extS=mscr(extP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
+lbl(extS,"SCRIPTS",1)
+local function extBtn(name,url,o) local b=mkb(extS,name,C.Bg) b.LayoutOrder=o b.Font=Enum.Font.GothamBold hfx(b,C.Bg,C.Ac) b.MouseButton1Click:Connect(function() b.Text="..." task.spawn(function() local ok=pcall(function() loadstring(game:HttpGet(url))() end) b.Text=ok and name.." [OK]" or name.." [FAIL]" task.wait(2) b.Text=name end) end) end
+extBtn("Infinite Yield","https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source",2)
+extBtn("Dex Explorer","https://raw.githubusercontent.com/infernuz/dex/master/dex.lua",3)
+sep(extS,4)
+lbl(extS,"CHAT SPAM",5)
+local spamFrame=Instance.new("Frame",extS) spamFrame.BackgroundColor3=C.Bg spamFrame.BorderSizePixel=0 spamFrame.Size=UDim2.new(1,0,0,62) spamFrame.LayoutOrder=6 rc(spamFrame)
+local spamPad=Instance.new("UIPadding",spamFrame) spamPad.PaddingLeft=UDim.new(0,4) spamPad.PaddingRight=UDim.new(0,4) spamPad.PaddingTop=UDim.new(0,4)
+local spamMsg=Instance.new("TextBox",spamFrame) spamMsg.BackgroundColor3=C.Bg2 spamMsg.BorderSizePixel=0 spamMsg.Size=UDim2.new(1,0,0,24) spamMsg.Font=Enum.Font.Gotham spamMsg.PlaceholderText="Message..." spamMsg.PlaceholderColor3=C.D spamMsg.Text="" spamMsg.TextColor3=C.W spamMsg.TextSize=10 spamMsg.ClearTextOnFocus=false rc(spamMsg,4)
+local spamBtn=Instance.new("TextButton",spamFrame) spamBtn.BackgroundColor3=C.Ac spamBtn.BorderSizePixel=0 spamBtn.Position=UDim2.new(0,0,0,28) spamBtn.Size=UDim2.new(1,0,0,26) spamBtn.Font=Enum.Font.GothamBold spamBtn.Text="Start Spam" spamBtn.TextColor3=C.W spamBtn.TextSize=10 spamBtn.AutoButtonColor=false rc(spamBtn,4) hfx(spamBtn,C.Ac,C.AcH)
+local spamOn=false
+spamBtn.MouseButton1Click:Connect(function()
+    spamOn=not spamOn spamBtn.Text=spamOn and "Stop Spam" or "Start Spam"
+    TweenService:Create(spamBtn,TweenInfo.new(0.1),{BackgroundColor3=spamOn and C.R or C.Ac}):Play()
+    if spamOn then task.spawn(function() while spamOn do pcall(function() local msg=spamMsg.Text if msg~="" then pcall(function() RS.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg,"All") end) end end) task.wait(1) end end) end
+end)
+sep(extS,7)
+lbl(extS,"CHARGER UN SCRIPT",8)
+local extUrlF=Instance.new("Frame",extS) extUrlF.BackgroundColor3=C.Bg extUrlF.BorderSizePixel=0 extUrlF.Size=UDim2.new(1,0,0,34) extUrlF.LayoutOrder=9 rc(extUrlF)
+local extUP=Instance.new("UIPadding",extUrlF) extUP.PaddingLeft=UDim.new(0,4) extUP.PaddingRight=UDim.new(0,4) extUP.PaddingTop=UDim.new(0,4)
+local extUrl=Instance.new("TextBox",extUrlF) extUrl.BackgroundColor3=C.Bg2 extUrl.BorderSizePixel=0 extUrl.Size=UDim2.new(0.75,-4,0,26) extUrl.Font=Enum.Font.Gotham extUrl.PlaceholderText="https://..." extUrl.PlaceholderColor3=C.D extUrl.Text="" extUrl.TextColor3=C.W extUrl.TextSize=10 extUrl.ClearTextOnFocus=false rc(extUrl,4)
+local extRun=Instance.new("TextButton",extUrlF) extRun.BackgroundColor3=C.Ac extRun.BorderSizePixel=0 extRun.Position=UDim2.new(0.75,2,0,0) extRun.Size=UDim2.new(0.25,-2,0,26) extRun.Font=Enum.Font.GothamBold extRun.Text="Run" extRun.TextColor3=C.W extRun.TextSize=11 extRun.AutoButtonColor=false rc(extRun,4) hfx(extRun,C.Ac,C.AcH)
+extRun.MouseButton1Click:Connect(function() local url=extUrl.Text if url=="" then return end extRun.Text="..." task.spawn(function() local ok=pcall(function() loadstring(game:HttpGet(url))() end) extRun.Text=ok and "OK" or "Fail" task.wait(2) extRun.Text="Run" end) end)
+sep(extS,10)
+lbl(extS,"EXECUTER DU CODE",11)
+local extCF=Instance.new("Frame",extS) extCF.BackgroundColor3=C.Bg extCF.BorderSizePixel=0 extCF.Size=UDim2.new(1,0,0,86) extCF.LayoutOrder=12 rc(extCF)
+local extCP=Instance.new("UIPadding",extCF) extCP.PaddingLeft=UDim.new(0,4) extCP.PaddingRight=UDim.new(0,4) extCP.PaddingTop=UDim.new(0,4)
+local extCode=Instance.new("TextBox",extCF) extCode.BackgroundColor3=C.Bg2 extCode.BorderSizePixel=0 extCode.Size=UDim2.new(1,0,0,50) extCode.Font=Enum.Font.Code extCode.PlaceholderText="code..." extCode.PlaceholderColor3=C.D extCode.Text="" extCode.TextColor3=C.W extCode.TextSize=10 extCode.ClearTextOnFocus=false extCode.MultiLine=true extCode.TextWrapped=true extCode.TextYAlignment=Enum.TextYAlignment.Top rc(extCode,4)
+local extExec=Instance.new("TextButton",extCF) extExec.BackgroundColor3=C.Ac extExec.BorderSizePixel=0 extExec.Position=UDim2.new(0,0,0,54) extExec.Size=UDim2.new(1,0,0,26) extExec.Font=Enum.Font.GothamBold extExec.Text="Executer" extExec.TextColor3=C.W extExec.TextSize=11 extExec.AutoButtonColor=false rc(extExec,4) hfx(extExec,C.Ac,C.AcH)
+extExec.MouseButton1Click:Connect(function() local code=extCode.Text if code=="" then return end extExec.Text="..." task.spawn(function() local ok=pcall(function() loadstring(code)() end) extExec.Text=ok and "OK" or "Erreur" task.wait(2) extExec.Text="Executer" end) end)
+
+-- CONFIG TAB
+local cfP=Instance.new("Frame",Main) cfP.BackgroundTransparency=1 cfP.Position=UDim2.new(0,0,0,cY) cfP.Size=UDim2.new(1,0,1,-cY) cfP.Visible=false pgs["Config"]=cfP
+local cfS=mscr(cfP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
+lbl(cfS,"KEYBINDS",1)
+local function mkKB(p,dn,ck,o) local f=Instance.new("Frame") f.Parent=p f.BackgroundColor3=C.Bg f.BorderSizePixel=0 f.Size=UDim2.new(1,0,0,26) f.LayoutOrder=o rc(f) local lb=Instance.new("TextLabel",f) lb.BackgroundTransparency=1 lb.Position=UDim2.new(0,8,0,0) lb.Size=UDim2.new(0.55,-8,1,0) lb.Font=Enum.Font.Gotham lb.TextColor3=C.W lb.TextSize=10 lb.TextXAlignment=Enum.TextXAlignment.Left lb.Text=dn local kb=Instance.new("TextButton",f) kb.BackgroundColor3=C.Bg2 kb.BorderSizePixel=0 kb.Position=UDim2.new(0.55,2,0,3) kb.Size=UDim2.new(0.45,-10,0,20) kb.Font=Enum.Font.GothamBold kb.TextColor3=C.D kb.TextSize=9 kb.Text=CFG[ck]~="" and CFG[ck] or "None" kb.AutoButtonColor=false rc(kb,4) local listening=false kb.MouseButton1Click:Connect(function() if listening then return end listening=true kb.Text="..." kb.TextColor3=C.W local cn cn=UIS.InputBegan:Connect(function(input,gpe) if gpe then return end if input.KeyCode and input.KeyCode~=Enum.KeyCode.Unknown then CFG[ck]=input.KeyCode.Name kb.Text=input.KeyCode.Name kb.TextColor3=C.D saveCFG(CFG) for _,t in ipairs(allToggles) do t.updateKeyLabel() end listening=false cn:Disconnect() end end) end) end
+mkKB(cfS,"Toggle GUI","toggleKey",2) mkKB(cfS,"Fly","flyKey",3) mkKB(cfS,"Noclip","noclipKey",4) mkKB(cfS,"Freecam","freecamKey",5) mkKB(cfS,"God Mode","godKey",6) mkKB(cfS,"ESP","espKey",7) mkKB(cfS,"Touch Fling","touchFlingKey",8) mkKB(cfS,"Fling All","flingAllKey",9)
+sep(cfS,10) lbl(cfS,"SETTINGS",11)
+local tAutoload=mkToggle(cfS,"Autoload on Rejoin",12) tAutoload.on(function(s) CFG.autoload=s saveCFG(CFG) end) if CFG.autoload then tAutoload.set(true) end
+sep(cfS,13) lbl(cfS,"ACTIONS",14)
+local function cBtn(t,o,col) local b=mkb(cfS,t,col or C.Bg) b.Font=Enum.Font.GothamBold b.LayoutOrder=o hfx(b,col or C.Bg,C.Ac) return b end
+cBtn("Rejoin",15).MouseButton1Click:Connect(function() pcall(function() TS:TeleportToPlaceInstance(game.PlaceId,game.JobId,lp) end) end)
+cBtn("Reset Character",16).MouseButton1Click:Connect(function() pcall(function() ghum().Health=0 end) end)
+cBtn("Server Hop",17).MouseButton1Click:Connect(function() pcall(function() local d=HS:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100")) for _,s in ipairs(d.data) do if s.id~=game.JobId and s.playing<s.maxPlayers then TS:TeleportToPlaceInstance(game.PlaceId,s.id,lp) break end end end) end)
+cBtn("Copy Place ID",18).MouseButton1Click:Connect(function() pcall(function() setclipboard(tostring(game.PlaceId)) end) end)
+cBtn("Anti Lag",19).MouseButton1Click:Connect(function() pcall(function() for _,v in ipairs(WS:GetDescendants()) do pcall(function() if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") or v:IsA("Explosion") then v:Destroy() end if v:IsA("Decal") or v:IsA("Texture") then v.Transparency=1 end if v:IsA("MeshPart") or v:IsA("UnionOperation") then pcall(function() v.RenderFidelity=Enum.RenderFidelity.Performance end) end end) end for _,v in ipairs(Lighting:GetDescendants()) do pcall(function() if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") then v:Destroy() end end) end pcall(function() settings().Rendering.QualityLevel=Enum.QualityLevel.Level01 end) Lighting.GlobalShadows=false Lighting.FogEnd=1e9 pcall(function() if WS.Terrain then WS.Terrain.Decoration=false end end) pcall(function() if setfpscap then setfpscap(60) end end) game:GetService("StarterGui"):SetCore("SendNotification",{Title="Anti Lag",Text="Applique",Duration=2}) end) end)
+cBtn("Destroy GUI",20,C.R).MouseButton1Click:Connect(function() TweenService:Create(Main,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.35) gui:Destroy() end)-- TOOLS LOGIC
 local aTools={}
 local function fTools() local t,seen={},{} local function addT(v,tag) if v:IsA("Tool") and v.Parent and v.Parent~=lp.Backpack and v.Parent~=gc() then local k=tostring(v)..v.Name if not seen[k] then seen[k]=true table.insert(t,{T=v,S=tag}) end end end local function scan(loc,tag) pcall(function() for _,v in ipairs(loc:GetDescendants()) do pcall(function() addT(v,tag) end) end end) end scan(WS,"WS") scan(RS,"RS") pcall(function() scan(game:GetService("ServerStorage"),"SS") end) pcall(function() scan(game:GetService("Lighting"),"LT") end) pcall(function() scan(game:GetService("StarterPack"),"SP") end) pcall(function() for _,v in ipairs(game:GetDescendants()) do pcall(function() if v:IsA("Tool") and v.Parent and v.Parent~=lp.Backpack and v.Parent~=gc() then local k=tostring(v)..v.Name if not seen[k] then seen[k]=true local s="?" pcall(function() s=v.Parent.Name end) table.insert(t,{T=v,S=s}) end end end) end end) pcall(function() if getnilinstances then for _,v in ipairs(getnilinstances()) do pcall(function() if v:IsA("Tool") then local k=tostring(v)..v.Name.."nil" if not seen[k] then seen[k]=true table.insert(t,{T=v,S="Nil"}) end end end) end end end) return t end
 local function rTools() for _,v in ipairs(oScr:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end aTools=fTools() local s=oSr.Text:lower() local dp={} for _,data in ipairs(aTools) do pcall(function() local n=data.T.Name local key=n.."_"..data.S if not dp[key] and (s=="" or n:lower():find(s,1,true)) then dp[key]=true local b=mkb(oScr,n.." ["..data.S.."]",C.Bg) hfx(b,C.Bg,C.Ac) b.MouseButton1Click:Connect(function() pcall(function() data.T:Clone().Parent=lp.Backpack end) end) end end) end end
