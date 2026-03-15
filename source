@@ -1,4 +1,4 @@
-local KEY="AvocatV2-2025"
+local KEY="FREE"
 local TweenService=game:GetService("TweenService")
 local UIS=game:GetService("UserInputService")
 local LP=game:GetService("Players").LocalPlayer
