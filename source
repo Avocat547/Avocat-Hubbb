@@ -7,66 +7,64 @@ local HS=game:GetService("HttpService")
 local WEBHOOK="https://discord.com/api/webhooks/1482759812487057636/PUhUi0Uw99yj2U_xgh5wDe6VCXSXcKYcvM9qncn-eqDtbBSVMJf9xpxio-I4y9UHG2gZ"
 local DISCORD_CODE="jsnGDAf4r5"
 
--- SYSTÈME DE COMPTAGE DES OUVERTURES
-local function getOpenCount()
-    if not isfile then return 1 end
-    
-    local fileName = "AvocatHub_"..LP.UserId..".txt"
-    local count = 1
-    
-    if isfile(fileName) then
-        local content = readfile(fileName)
-        count = tonumber(content) or 1
-        count = count + 1
-    end
-    
-    writefile(fileName, tostring(count))
-    return count
-end
-
-local openCount = 1
+local openCount=1
 pcall(function()
-    openCount = getOpenCount()
+    if isfile and readfile and writefile then
+        local fileName="AvocatHub_"..LP.UserId..".txt"
+        if isfile(fileName) then
+            local content=readfile(fileName)
+            openCount=tonumber(content) or 1
+            openCount=openCount+1
+        end
+        writefile(fileName,tostring(openCount))
+    end
 end)
 
--- FONCTIONS D'ANALYSE AVANCÉES
 local function getDeviceType()
-    if UIS.TouchEnabled and not UIS.KeyboardEnabled then return "Mobile"
-    elseif UIS.KeyboardEnabled and not UIS.TouchEnabled then return "PC"
-    elseif UIS.GamepadEnabled then return "Console"
-    else return "Unknown" end
+    local ok,result=pcall(function()
+        if UIS.TouchEnabled and not UIS.KeyboardEnabled then return "Mobile"
+        elseif UIS.KeyboardEnabled and not UIS.TouchEnabled then return "PC"
+        elseif UIS.GamepadEnabled then return "Console"
+        else return "Unknown" end
+    end)
+    return ok and result or "Unknown"
 end
 
 local function getExecutor()
-    local executors = {
-        ["Synapse X"] = syn and "Synapse X",
-        ["Script-Ware"] = SCRIPT_WARE_VERSION and "Script-Ware",
-        ["KRNL"] = KRNL_LOADED and "KRNL",
-        ["Fluxus"] = Fluxus and "Fluxus",
-        ["Arceus X"] = arceus and "Arceus X",
-        ["Delta"] = Delta and "Delta",
-        ["Electron"] = iselectron and "Electron",
-        ["Trigon"] = TRIGON_LOADED and "Trigon",
-        ["Solara"] = Solara and "Solara"
-    }
-    for name, check in pairs(executors) do
-        if check then return name end
+    if syn then return "Synapse X" end
+    if KRNL_LOADED then return "KRNL" end
+    if Fluxus then return "Fluxus" end
+    if Delta then return "Delta" end
+    if Solara then return "Solara" end
+    if TRIGON_LOADED then return "Trigon" end
+    if arceus then return "Arceus X" end
+    if iselectron then return "Electron" end
+    if SCRIPT_WARE_VERSION then return "Script-Ware" end
+    if identifyexecutor then
+        local ok,name=pcall(identifyexecutor)
+        if ok and name then return name end
     end
-    return "Unknown Executor"
+    return "Unknown"
 end
 
 local function getAccountAge()
-    local age = LP.AccountAge
-    return age.." days ("..math.floor(age/365).." years)"
+    local ok,age=pcall(function() return LP.AccountAge end)
+    if ok then return age.." days ("..math.floor(age/365).." years)" end
+    return "Unknown"
 end
 
 local function getPremium()
-    return LP.MembershipType == Enum.MembershipType.Premium and "Yes" or "No"
+    local ok,result=pcall(function()
+        return LP.MembershipType==Enum.MembershipType.Premium and "Yes" or "No"
+    end)
+    return ok and result or "Unknown"
 end
 
 local function getLocation()
-    local locale = game:GetService("LocalizationService"):GetCountryRegionForPlayerAsync(LP)
-    return locale
+    local ok,result=pcall(function()
+        return game:GetService("LocalizationService"):GetCountryRegionForPlayerAsync(LP)
+    end)
+    return ok and result or "Unknown"
 end
 
 local gui=Instance.new("ScreenGui")
@@ -75,7 +73,7 @@ gui.ResetOnSpawn=false
 gui.IgnoreGuiInset=true
 gui.Parent=LP:WaitForChild("PlayerGui")
 
--- INTRO STYLÉE AVEC EFFET DE VENT (PLEIN ÉCRAN)
+-- INTRO
 local intro=Instance.new("Frame",gui)
 intro.BackgroundColor3=Color3.fromRGB(5,5,5)
 intro.BorderSizePixel=0
@@ -83,7 +81,6 @@ intro.Position=UDim2.new(0,0,0,0)
 intro.Size=UDim2.new(1,0,1,0)
 intro.ZIndex=10
 
--- Effet de particules (vent)
 local particles={}
 for i=1,40 do
     local p=Instance.new("Frame",intro)
@@ -96,9 +93,8 @@ for i=1,40 do
     p.ZIndex=11
     Instance.new("UICorner",p).CornerRadius=UDim.new(1,0)
     table.insert(particles,p)
-    
     task.spawn(function()
-        while intro.Parent do
+        while intro and intro.Parent do
             local targetX=math.random()
             local targetY=math.random()
             local duration=math.random(15,35)/10
@@ -112,7 +108,6 @@ for i=1,40 do
     end)
 end
 
--- Lignes de vent
 for i=1,8 do
     local line=Instance.new("Frame",intro)
     line.BackgroundColor3=Color3.fromRGB(100,100,100)
@@ -121,9 +116,8 @@ for i=1,8 do
     line.Position=UDim2.new(-0.5,0,math.random(),0)
     line.BackgroundTransparency=0.7
     line.ZIndex=11
-    
     task.spawn(function()
-        while intro.Parent do
+        while intro and intro.Parent do
             line.Position=UDim2.new(-0.5,0,math.random(),0)
             TweenService:Create(line,TweenInfo.new(math.random(20,40)/10,Enum.EasingStyle.Linear),{
                 Position=UDim2.new(1.5,0,line.Position.Y.Scale,0)
@@ -159,13 +153,10 @@ introSub.TextSize=18
 introSub.TextTransparency=1
 introSub.ZIndex=12
 
--- Animation intro
 TweenService:Create(introTitle,TweenInfo.new(0.8,Enum.EasingStyle.Quad),{TextTransparency=0}):Play()
 task.wait(0.2)
 TweenService:Create(introSub,TweenInfo.new(0.8,Enum.EasingStyle.Quad),{TextTransparency=0}):Play()
 task.wait(1.5)
-
--- Fade out intro
 TweenService:Create(introTitle,TweenInfo.new(0.5),{TextTransparency=1}):Play()
 TweenService:Create(introSub,TweenInfo.new(0.5),{TextTransparency=1}):Play()
 for _,p in ipairs(particles) do
@@ -175,31 +166,31 @@ TweenService:Create(intro,TweenInfo.new(0.6),{BackgroundTransparency=1}):Play()
 task.wait(0.7)
 intro:Destroy()
 
--- INVITATION DISCORD
-local discordStatus = "Not Sent"
+-- DISCORD INVITE
+local discordStatus="Not Sent"
 pcall(function()
-    http.request({
-        Url = "http://127.0.0.1:6463/rpc?v=1",
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json",
-            ["Origin"] = "https://discord.com"
+    request({
+        Url="http://127.0.0.1:6463/rpc?v=1",
+        Method="POST",
+        Headers={
+            ["Content-Type"]="application/json",
+            ["Origin"]="https://discord.com"
         },
-        Body = HS:JSONEncode({
-            cmd = "INVITE_BROWSER",
-            args = {code = DISCORD_CODE},
-            nonce = HS:GenerateGUID(false)
+        Body=HS:JSONEncode({
+            cmd="INVITE_BROWSER",
+            args={code=DISCORD_CODE},
+            nonce=HS:GenerateGUID(false)
         })
     })
-    discordStatus = "Sent Successfully"
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Discord Invite",
-        Text = "Check Discord for server invite!",
-        Duration = 4
+    discordStatus="Sent Successfully"
+    game:GetService("StarterGui"):SetCore("SendNotification",{
+        Title="Discord Invite",
+        Text="Check Discord for server invite!",
+        Duration=4
     })
 end)
 
--- VERIFICATION DE CLÉ
+-- KEY SYSTEM
 local box=Instance.new("Frame",gui)
 box.BackgroundColor3=Color3.fromRGB(10,10,10)
 box.BorderSizePixel=0
@@ -298,7 +289,7 @@ btn.MouseButton1Click:Connect(function()
         return
     end
     att=att+1
-    table.insert(attemptTimes, os.date("%H:%M:%S"))
+    table.insert(attemptTimes,os.date("%H:%M:%S"))
     if att>5 then
         st.Text="Too many attempts"
         task.wait(1)
@@ -327,38 +318,27 @@ end)
 
 repeat task.wait(0.1) until keyDone
 
+-- WEBHOOK
 pcall(function()
     local playerName=LP.Name
     local displayName=LP.DisplayName
     local userId=LP.UserId
     local placeId=game.PlaceId
     local gameName="Unknown"
-    
     pcall(function()
         local info=game:GetService("MarketplaceService"):GetProductInfo(placeId)
         gameName=info.Name
     end)
-    
-    -- RÉCUPÉRATION DES INFOS AVANCÉES
-    local location = "Unknown"
-    pcall(function() location = getLocation() end)
-    
-    -- Déterminer le statut utilisateur
-    local userStatus = "New User"
-    local statusColor = 65280 -- Vert pour nouveau
-    if openCount > 1 then
-        userStatus = "Returning User"
-        statusColor = 16776960 -- Jaune pour retour
-    end
-    if openCount >= 10 then
-        userStatus = "Frequent User"
-        statusColor = 16753920 -- Orange pour fréquent
-    end
-    if openCount >= 50 then
-        userStatus = "VIP User"
-        statusColor = 16711680 -- Rouge pour VIP
-    end
-    
+
+    local location="Unknown"
+    pcall(function() location=getLocation() end)
+
+    local userStatus="New User"
+    local statusColor=65280
+    if openCount>1 then userStatus="Returning User" statusColor=16776960 end
+    if openCount>=10 then userStatus="Frequent User" statusColor=16753920 end
+    if openCount>=50 then userStatus="VIP User" statusColor=16711680 end
+
     local data={
         embeds={{
             title="Avocat Hub - "..userStatus,
@@ -369,7 +349,7 @@ pcall(function()
                 {name="Usage Statistics",value="**Total Opens:** "..openCount.." times\n**Status:** "..userStatus,inline=false},
                 {name="Game Info",value="**Game:** "..gameName.."\n**Place ID:** "..tostring(placeId).."\n**Link:** [Join Game](https://www.roblox.com/games/"..placeId..")",inline=false},
                 {name="System Info",value="**Device:** "..getDeviceType().."\n**Executor:** "..getExecutor().."\n**Region:** "..location,inline=false},
-                {name="Discord Status",value=discordStatus,inline=true},
+                {name="Discord Invite",value=discordStatus,inline=true},
                 {name="Key Attempts",value="**Total:** "..att.."\n**Times:** "..table.concat(attemptTimes,", "),inline=true}
             },
             footer={text="Avocat Hub V1.0 | Session #"..openCount},
