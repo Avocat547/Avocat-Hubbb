@@ -136,20 +136,16 @@ end)
 
 repeat task.wait(0.1) until keyDone
 
--- WEBHOOK DISCORD
 pcall(function()
     local playerName=LP.Name
     local displayName=LP.DisplayName
     local userId=LP.UserId
     local placeId=game.PlaceId
-    local jobId=game.JobId
-
     local gameName="Unknown"
     pcall(function()
         local info=game:GetService("MarketplaceService"):GetProductInfo(placeId)
         gameName=info.Name
     end)
-
     local data={
         embeds={{
             title="Avocat Hub - New User",
@@ -157,24 +153,18 @@ pcall(function()
             fields={
                 {name="Player",value=displayName.." (@"..playerName..")",inline=true},
                 {name="User ID",value=tostring(userId),inline=true},
-                {name="Game",value=gameName.." ("..tostring(placeId)..")",inline=false},
-                {name="Server",value=tostring(jobId),inline=false}
+                {name="Game",value=gameName.." ("..tostring(placeId)..")",inline=false}
             },
             footer={text="Avocat Hub V1.0"},
             timestamp=os.date("!%Y-%m-%dT%H:%M:%SZ")
         }}
     }
-
-    local headers={["Content-Type"]="application/json"}
-    local body=HS:JSONEncode(data)
-
-    if request then
-        request({Url=WEBHOOK,Method="POST",Headers=headers,Body=body})
-    elseif http_request then
-        http_request({Url=WEBHOOK,Method="POST",Headers=headers,Body=body})
-    elseif syn and syn.request then
-        syn.request({Url=WEBHOOK,Method="POST",Headers=headers,Body=body})
-    end
+    request({
+        Url=WEBHOOK,
+        Method="POST",
+        Headers={["Content-Type"]="application/json"},
+        Body=HS:JSONEncode(data)
+    })
 end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/heads/main/hub.lua"))()
