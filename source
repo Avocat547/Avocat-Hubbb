@@ -2,50 +2,135 @@ local KEY="AvocatV2-2025"
 local TweenService=game:GetService("TweenService")
 local UIS=game:GetService("UserInputService")
 local LP=game:GetService("Players").LocalPlayer
-pcall(function() if game:GetService("CoreGui"):FindFirstChild("AvocatKey") then game:GetService("CoreGui"):FindFirstChild("AvocatKey"):Destroy() end end)
-pcall(function() if game:GetService("CoreGui"):FindFirstChild("AvocatHub") then game:GetService("CoreGui"):FindFirstChild("AvocatHub"):Destroy() end end)
-local gui=Instance.new("ScreenGui") gui.Name="AvocatKey" gui.ResetOnSpawn=false
-pcall(function() if syn and syn.protect_gui then syn.protect_gui(gui) end end)
-pcall(function() if gethui then gui.Parent=gethui() else gui.Parent=game:GetService("CoreGui") end end)
-if not gui.Parent then gui.Parent=LP:WaitForChild("PlayerGui") end
-local box=Instance.new("Frame",gui) box.BackgroundColor3=Color3.fromRGB(10,10,10) box.BorderSizePixel=0 box.AnchorPoint=Vector2.new(0.5,0.5) box.Position=UDim2.new(0.5,0,0.5,0) box.Size=UDim2.new(0,0,0,0) box.Active=true Instance.new("UICorner",box).CornerRadius=UDim.new(0,12) Instance.new("UIStroke",box).Color=Color3.fromRGB(48,48,48)
-local dr,drs,drp=false,nil,nil box.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then dr=true drs=i.Position drp=box.Position i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then dr=false end end) end end) UIS.InputChanged:Connect(function(i) if dr and(i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch)then local delta=i.Position-drs box.Position=UDim2.new(drp.X.Scale,drp.X.Offset+delta.X,drp.Y.Scale,drp.Y.Offset+delta.Y) end end)
-local t=Instance.new("TextLabel",box) t.BackgroundTransparency=1 t.Position=UDim2.new(0,0,0,20) t.Size=UDim2.new(1,0,0,30) t.Font=Enum.Font.GothamBold t.Text="Avocat Hub" t.TextColor3=Color3.fromRGB(255,255,255) t.TextSize=20 t.TextTransparency=1
-local s=Instance.new("TextLabel",box) s.BackgroundTransparency=1 s.Position=UDim2.new(0,0,0,50) s.Size=UDim2.new(1,0,0,18) s.Font=Enum.Font.Gotham s.Text="Systeme de verification" s.TextColor3=Color3.fromRGB(130,130,130) s.TextSize=11 s.TextTransparency=1
-local inp=Instance.new("TextBox",box) inp.BackgroundColor3=Color3.fromRGB(18,18,18) inp.BorderSizePixel=0 inp.Position=UDim2.new(0.1,0,0,85) inp.Size=UDim2.new(0.8,0,0,32) inp.Font=Enum.Font.Gotham inp.PlaceholderText="Entrer la key..." inp.PlaceholderColor3=Color3.fromRGB(60,60,60) inp.Text="" inp.TextColor3=Color3.fromRGB(255,255,255) inp.TextSize=12 inp.ClearTextOnFocus=false inp.TextTransparency=1 Instance.new("UICorner",inp).CornerRadius=UDim.new(0,6)
-local st=Instance.new("TextLabel",box) st.BackgroundTransparency=1 st.Position=UDim2.new(0,0,0,122) st.Size=UDim2.new(1,0,0,16) st.Font=Enum.Font.Gotham st.Text="" st.TextColor3=Color3.fromRGB(160,35,35) st.TextSize=10 st.TextTransparency=1
-local lb=Instance.new("Frame",box) lb.BackgroundColor3=Color3.fromRGB(18,18,18) lb.BorderSizePixel=0 lb.Position=UDim2.new(0.1,0,0,142) lb.Size=UDim2.new(0.8,0,0,6) Instance.new("UICorner",lb).CornerRadius=UDim.new(0,3) lb.Visible=false
-local lf=Instance.new("Frame",lb) lf.BackgroundColor3=Color3.fromRGB(48,48,48) lf.BorderSizePixel=0 lf.Size=UDim2.new(0,0,1,0) Instance.new("UICorner",lf).CornerRadius=UDim.new(0,3)
-local btn=Instance.new("TextButton",box) btn.BackgroundColor3=Color3.fromRGB(48,48,48) btn.BorderSizePixel=0 btn.Position=UDim2.new(0.1,0,0,155) btn.Size=UDim2.new(0.8,0,0,32) btn.Font=Enum.Font.GothamBold btn.Text="Valider" btn.TextColor3=Color3.fromRGB(255,255,255) btn.TextSize=13 btn.AutoButtonColor=false btn.TextTransparency=1 Instance.new("UICorner",btn).CornerRadius=UDim.new(0,6)
-TweenService:Create(box,TweenInfo.new(0.5,Enum.EasingStyle.Back),{Size=UDim2.new(0,320,0,210)}):Play() task.wait(0.3) for _,v in ipairs({t,s,inp,st,btn}) do TweenService:Create(v,TweenInfo.new(0.3),{TextTransparency=0}):Play() task.wait(0.1) end
-btn.MouseEnter:Connect(function() TweenService:Create(btn,TweenInfo.new(0.08),{BackgroundColor3=Color3.fromRGB(62,62,62)}):Play() end) btn.MouseLeave:Connect(function() TweenService:Create(btn,TweenInfo.new(0.08),{BackgroundColor3=Color3.fromRGB(48,48,48)}):Play() end)
-local keyDone=false local att=0
-btn.MouseButton1Click:Connect(function() local e=inp.Text:gsub("%s+","") if e=="" then st.Text="Entre une key" st.TextColor3=Color3.fromRGB(160,35,35) return end att=att+1 if att>5 then st.Text="Trop de tentatives" task.wait(1) TweenService:Create(box,TweenInfo.new(0.3),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.4) gui:Destroy() return end if e==KEY then st.Text="Key valide" st.TextColor3=Color3.fromRGB(80,200,80) btn.Visible=false lb.Visible=true for i,txt in ipairs({"Verification...","Chargement...","Initialisation...","Avocat Hub"}) do s.Text=txt TweenService:Create(lf,TweenInfo.new(0.4),{Size=UDim2.new(i/4,0,1,0)}):Play() task.wait(0.5) end task.wait(0.3) TweenService:Create(box,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.4) gui:Destroy() keyDone=true else st.Text="Key invalide ("..att.."/5)" st.TextColor3=Color3.fromRGB(160,35,35) inp.Text="" local p=box.Position TweenService:Create(box,TweenInfo.new(0.05),{Position=UDim2.new(p.X.Scale,p.X.Offset+8,p.Y.Scale,p.Y.Offset)}):Play() task.wait(0.05) TweenService:Create(box,TweenInfo.new(0.05),{Position=UDim2.new(p.X.Scale,p.X.Offset-8,p.Y.Scale,p.Y.Offset)}):Play() task.wait(0.05) TweenService:Create(box,TweenInfo.new(0.05),{Position=p}):Play() end end)
+
+local gui=Instance.new("ScreenGui")
+gui.Name="AvocatKey"
+gui.ResetOnSpawn=false
+gui.Parent=LP:WaitForChild("PlayerGui")
+
+local box=Instance.new("Frame",gui)
+box.BackgroundColor3=Color3.fromRGB(10,10,10)
+box.BorderSizePixel=0
+box.AnchorPoint=Vector2.new(0.5,0.5)
+box.Position=UDim2.new(0.5,0,0.5,0)
+box.Size=UDim2.new(0,0,0,0)
+box.Active=true
+Instance.new("UICorner",box).CornerRadius=UDim.new(0,12)
+Instance.new("UIStroke",box).Color=Color3.fromRGB(48,48,48)
+
+local t=Instance.new("TextLabel",box)
+t.BackgroundTransparency=1
+t.Position=UDim2.new(0,0,0,20)
+t.Size=UDim2.new(1,0,0,30)
+t.Font=Enum.Font.GothamBold
+t.Text="Avocat Hub"
+t.TextColor3=Color3.fromRGB(255,255,255)
+t.TextSize=20
+
+local s=Instance.new("TextLabel",box)
+s.BackgroundTransparency=1
+s.Position=UDim2.new(0,0,0,50)
+s.Size=UDim2.new(1,0,0,18)
+s.Font=Enum.Font.Gotham
+s.Text="Systeme de verification"
+s.TextColor3=Color3.fromRGB(130,130,130)
+s.TextSize=11
+
+local inp=Instance.new("TextBox",box)
+inp.BackgroundColor3=Color3.fromRGB(18,18,18)
+inp.BorderSizePixel=0
+inp.Position=UDim2.new(0.1,0,0,85)
+inp.Size=UDim2.new(0.8,0,0,32)
+inp.Font=Enum.Font.Gotham
+inp.PlaceholderText="Entrer la key..."
+inp.PlaceholderColor3=Color3.fromRGB(60,60,60)
+inp.Text=""
+inp.TextColor3=Color3.fromRGB(255,255,255)
+inp.TextSize=12
+inp.ClearTextOnFocus=false
+Instance.new("UICorner",inp).CornerRadius=UDim.new(0,6)
+
+local st=Instance.new("TextLabel",box)
+st.BackgroundTransparency=1
+st.Position=UDim2.new(0,0,0,122)
+st.Size=UDim2.new(1,0,0,16)
+st.Font=Enum.Font.Gotham
+st.Text=""
+st.TextColor3=Color3.fromRGB(160,35,35)
+st.TextSize=10
+
+local lb=Instance.new("Frame",box)
+lb.BackgroundColor3=Color3.fromRGB(18,18,18)
+lb.BorderSizePixel=0
+lb.Position=UDim2.new(0.1,0,0,142)
+lb.Size=UDim2.new(0.8,0,0,6)
+Instance.new("UICorner",lb).CornerRadius=UDim.new(0,3)
+lb.Visible=false
+
+local lf=Instance.new("Frame",lb)
+lf.BackgroundColor3=Color3.fromRGB(48,48,48)
+lf.BorderSizePixel=0
+lf.Size=UDim2.new(0,0,1,0)
+Instance.new("UICorner",lf).CornerRadius=UDim.new(0,3)
+
+local btn=Instance.new("TextButton",box)
+btn.BackgroundColor3=Color3.fromRGB(48,48,48)
+btn.BorderSizePixel=0
+btn.Position=UDim2.new(0.1,0,0,155)
+btn.Size=UDim2.new(0.8,0,0,32)
+btn.Font=Enum.Font.GothamBold
+btn.Text="Valider"
+btn.TextColor3=Color3.fromRGB(255,255,255)
+btn.TextSize=13
+btn.AutoButtonColor=false
+Instance.new("UICorner",btn).CornerRadius=UDim.new(0,6)
+
+TweenService:Create(box,TweenInfo.new(0.5,Enum.EasingStyle.Back),{Size=UDim2.new(0,320,0,210)}):Play()
+
+btn.MouseEnter:Connect(function()
+    TweenService:Create(btn,TweenInfo.new(0.08),{BackgroundColor3=Color3.fromRGB(62,62,62)}):Play()
+end)
+btn.MouseLeave:Connect(function()
+    TweenService:Create(btn,TweenInfo.new(0.08),{BackgroundColor3=Color3.fromRGB(48,48,48)}):Play()
+end)
+
+local keyDone=false
+local att=0
+
+btn.MouseButton1Click:Connect(function()
+    local e=inp.Text:gsub("%s+","")
+    if e=="" then
+        st.Text="Entre une key"
+        st.TextColor3=Color3.fromRGB(160,35,35)
+        return
+    end
+    att=att+1
+    if att>5 then
+        st.Text="Trop de tentatives"
+        task.wait(1)
+        gui:Destroy()
+        return
+    end
+    if e==KEY then
+        st.Text="Key valide"
+        st.TextColor3=Color3.fromRGB(80,200,80)
+        btn.Visible=false
+        lb.Visible=true
+        for i,txt in ipairs({"Verification...","Chargement...","Initialisation...","Avocat Hub"}) do
+            s.Text=txt
+            TweenService:Create(lf,TweenInfo.new(0.4),{Size=UDim2.new(i/4,0,1,0)}):Play()
+            task.wait(0.5)
+        end
+        task.wait(0.3)
+        gui:Destroy()
+        keyDone=true
+    else
+        st.Text="Key invalide ("..att.."/5)"
+        st.TextColor3=Color3.fromRGB(160,35,35)
+        inp.Text=""
+    end
+end)
+
 repeat task.wait(0.1) until keyDone
 
--- CHARGEMENT AVEC DEBUG
-local url="https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/heads/main/hub.lua"
-local success,code=pcall(function()
-    return game:HttpGet(url)
-end)
-if not success then
-    warn("[AVOCAT] Erreur HttpGet: "..tostring(code))
-    game:GetService("StarterGui"):SetCore("SendNotification",{Title="Erreur",Text="Impossible de telecharger le script",Duration=5})
-    return
-end
-if not code or code=="" then
-    warn("[AVOCAT] Script vide")
-    game:GetService("StarterGui"):SetCore("SendNotification",{Title="Erreur",Text="Script vide sur GitHub",Duration=5})
-    return
-end
-local fn,err=loadstring(code)
-if not fn then
-    warn("[AVOCAT] Erreur loadstring: "..tostring(err))
-    game:GetService("StarterGui"):SetCore("SendNotification",{Title="Erreur",Text="Erreur dans le script: "..tostring(err),Duration=10})
-    return
-end
-local ok,runErr=pcall(fn)
-if not ok then
-    warn("[AVOCAT] Erreur execution: "..tostring(runErr))
-    game:GetService("StarterGui"):SetCore("SendNotification",{Title="Erreur",Text="Crash: "..tostring(runErr),Duration=10})
-end
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/heads/main/hub.lua"))()
