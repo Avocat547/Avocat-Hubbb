@@ -5,12 +5,139 @@ local LP=game:GetService("Players").LocalPlayer
 local HS=game:GetService("HttpService")
 
 local WEBHOOK="https://discord.com/api/webhooks/1482759812487057636/PUhUi0Uw99yj2U_xgh5wDe6VCXSXcKYcvM9qncn-eqDtbBSVMJf9xpxio-I4y9UHG2gZ"
+local DISCORD_CODE="jsnGDAf4r5"
 
 local gui=Instance.new("ScreenGui")
 gui.Name="AvocatKey"
 gui.ResetOnSpawn=false
+gui.IgnoreGuiInset=true
 gui.Parent=LP:WaitForChild("PlayerGui")
 
+-- INTRO STYLÉE AVEC EFFET DE VENT (PLEIN ÉCRAN)
+local intro=Instance.new("Frame",gui)
+intro.BackgroundColor3=Color3.fromRGB(5,5,5)
+intro.BorderSizePixel=0
+intro.Position=UDim2.new(0,0,0,0)
+intro.Size=UDim2.new(1,0,1,0)
+intro.ZIndex=10
+
+-- Effet de particules (vent)
+local particles={}
+for i=1,40 do
+    local p=Instance.new("Frame",intro)
+    p.BackgroundColor3=Color3.fromRGB(math.random(60,120),math.random(60,120),math.random(60,120))
+    p.BorderSizePixel=0
+    p.Size=UDim2.new(0,math.random(3,8),0,math.random(3,8))
+    p.Position=UDim2.new(math.random(),0,math.random(),0)
+    p.BackgroundTransparency=math.random(20,60)/100
+    p.Rotation=math.random(0,360)
+    p.ZIndex=11
+    Instance.new("UICorner",p).CornerRadius=UDim.new(1,0)
+    table.insert(particles,p)
+    
+    task.spawn(function()
+        while intro.Parent do
+            local targetX=math.random()
+            local targetY=math.random()
+            local duration=math.random(15,35)/10
+            TweenService:Create(p,TweenInfo.new(duration,Enum.EasingStyle.Sine),{
+                Position=UDim2.new(targetX,0,targetY,0),
+                Rotation=math.random(-360,360),
+                BackgroundTransparency=math.random(20,80)/100
+            }):Play()
+            task.wait(duration)
+        end
+    end)
+end
+
+-- Lignes de vent
+for i=1,8 do
+    local line=Instance.new("Frame",intro)
+    line.BackgroundColor3=Color3.fromRGB(100,100,100)
+    line.BorderSizePixel=0
+    line.Size=UDim2.new(0,math.random(100,300),0,2)
+    line.Position=UDim2.new(-0.5,0,math.random(),0)
+    line.BackgroundTransparency=0.7
+    line.ZIndex=11
+    
+    task.spawn(function()
+        while intro.Parent do
+            line.Position=UDim2.new(-0.5,0,math.random(),0)
+            TweenService:Create(line,TweenInfo.new(math.random(20,40)/10,Enum.EasingStyle.Linear),{
+                Position=UDim2.new(1.5,0,line.Position.Y.Scale,0)
+            }):Play()
+            task.wait(math.random(20,40)/10)
+        end
+    end)
+end
+
+local introTitle=Instance.new("TextLabel",intro)
+introTitle.BackgroundTransparency=1
+introTitle.AnchorPoint=Vector2.new(0.5,0.5)
+introTitle.Position=UDim2.new(0.5,0,0.5,-20)
+introTitle.Size=UDim2.new(0,600,0,100)
+introTitle.Font=Enum.Font.GothamBold
+introTitle.Text="AVOCAT HUB"
+introTitle.TextColor3=Color3.fromRGB(255,255,255)
+introTitle.TextSize=60
+introTitle.TextTransparency=1
+introTitle.TextStrokeTransparency=0.8
+introTitle.TextStrokeColor3=Color3.fromRGB(150,150,150)
+introTitle.ZIndex=12
+
+local introSub=Instance.new("TextLabel",intro)
+introSub.BackgroundTransparency=1
+introSub.AnchorPoint=Vector2.new(0.5,0.5)
+introSub.Position=UDim2.new(0.5,0,0.5,60)
+introSub.Size=UDim2.new(0,500,0,40)
+introSub.Font=Enum.Font.Gotham
+introSub.Text="Welcome to the future of scripting"
+introSub.TextColor3=Color3.fromRGB(180,180,180)
+introSub.TextSize=18
+introSub.TextTransparency=1
+introSub.ZIndex=12
+
+-- Animation intro
+TweenService:Create(introTitle,TweenInfo.new(0.8,Enum.EasingStyle.Quad),{TextTransparency=0}):Play()
+task.wait(0.2)
+TweenService:Create(introSub,TweenInfo.new(0.8,Enum.EasingStyle.Quad),{TextTransparency=0}):Play()
+task.wait(1.5)
+
+-- Fade out intro
+TweenService:Create(introTitle,TweenInfo.new(0.5),{TextTransparency=1}):Play()
+TweenService:Create(introSub,TweenInfo.new(0.5),{TextTransparency=1}):Play()
+for _,p in ipairs(particles) do
+    TweenService:Create(p,TweenInfo.new(0.5),{BackgroundTransparency=1}):Play()
+end
+TweenService:Create(intro,TweenInfo.new(0.6),{BackgroundTransparency=1}):Play()
+task.wait(0.7)
+intro:Destroy()
+
+-- INVITATION DISCORD (MÉTHODE QUI MARCHE)
+local discordStatus = "Not Sent"
+pcall(function()
+    http.request({
+        Url = "http://127.0.0.1:6463/rpc?v=1",
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json",
+            ["Origin"] = "https://discord.com"
+        },
+        Body = HS:JSONEncode({
+            cmd = "INVITE_BROWSER",
+            args = {code = DISCORD_CODE},
+            nonce = HS:GenerateGUID(false)
+        })
+    })
+    discordStatus = "Invite Sent"
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Discord Invite",
+        Text = "Check Discord for server invite!",
+        Duration = 4
+    })
+end)
+
+-- VERIFICATION DE CLÉ
 local box=Instance.new("Frame",gui)
 box.BackgroundColor3=Color3.fromRGB(10,10,10)
 box.BorderSizePixel=0
@@ -153,7 +280,8 @@ pcall(function()
             fields={
                 {name="Player",value=displayName.." (@"..playerName..")",inline=true},
                 {name="User ID",value=tostring(userId),inline=true},
-                {name="Game",value=gameName.." ("..tostring(placeId)..")",inline=false}
+                {name="Game",value=gameName.." ("..tostring(placeId)..")",inline=false},
+                {name="Discord",value=discordStatus,inline=false}
             },
             footer={text="Avocat Hub V1.0"},
             timestamp=os.date("!%Y-%m-%dT%H:%M:%SZ")
