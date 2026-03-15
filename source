@@ -2,6 +2,9 @@ local KEY="FREE"
 local TweenService=game:GetService("TweenService")
 local UIS=game:GetService("UserInputService")
 local LP=game:GetService("Players").LocalPlayer
+local HS=game:GetService("HttpService")
+
+local WEBHOOK="https://discord.com/api/webhooks/1482759812487057636/PUhUi0Uw99yj2U_xgh5wDe6VCXSXcKYcvM9qncn-eqDtbBSVMJf9xpxio-I4y9UHG2gZ"
 
 local gui=Instance.new("ScreenGui")
 gui.Name="AvocatKey"
@@ -32,7 +35,7 @@ s.BackgroundTransparency=1
 s.Position=UDim2.new(0,0,0,50)
 s.Size=UDim2.new(1,0,0,18)
 s.Font=Enum.Font.Gotham
-s.Text="Systeme de verification"
+s.Text="Verification System"
 s.TextColor3=Color3.fromRGB(130,130,130)
 s.TextSize=11
 
@@ -42,7 +45,7 @@ inp.BorderSizePixel=0
 inp.Position=UDim2.new(0.1,0,0,85)
 inp.Size=UDim2.new(0.8,0,0,32)
 inp.Font=Enum.Font.Gotham
-inp.PlaceholderText="Entrer la key..."
+inp.PlaceholderText="Enter key..."
 inp.PlaceholderColor3=Color3.fromRGB(60,60,60)
 inp.Text=""
 inp.TextColor3=Color3.fromRGB(255,255,255)
@@ -79,7 +82,7 @@ btn.BorderSizePixel=0
 btn.Position=UDim2.new(0.1,0,0,155)
 btn.Size=UDim2.new(0.8,0,0,32)
 btn.Font=Enum.Font.GothamBold
-btn.Text="Valider"
+btn.Text="Submit"
 btn.TextColor3=Color3.fromRGB(255,255,255)
 btn.TextSize=13
 btn.AutoButtonColor=false
@@ -100,23 +103,23 @@ local att=0
 btn.MouseButton1Click:Connect(function()
     local e=inp.Text:gsub("%s+","")
     if e=="" then
-        st.Text="Entre une key"
+        st.Text="Enter a key"
         st.TextColor3=Color3.fromRGB(160,35,35)
         return
     end
     att=att+1
     if att>5 then
-        st.Text="Trop de tentatives"
+        st.Text="Too many attempts"
         task.wait(1)
         gui:Destroy()
         return
     end
     if e==KEY then
-        st.Text="Key valide"
+        st.Text="Valid key"
         st.TextColor3=Color3.fromRGB(80,200,80)
         btn.Visible=false
         lb.Visible=true
-        for i,txt in ipairs({"Verification...","Chargement...","Initialisation...","Avocat Hub"}) do
+        for i,txt in ipairs({"Verification...","Loading...","Initializing...","Avocat Hub"}) do
             s.Text=txt
             TweenService:Create(lf,TweenInfo.new(0.4),{Size=UDim2.new(i/4,0,1,0)}):Play()
             task.wait(0.5)
@@ -125,12 +128,53 @@ btn.MouseButton1Click:Connect(function()
         gui:Destroy()
         keyDone=true
     else
-        st.Text="Key invalide ("..att.."/5)"
+        st.Text="Invalid key ("..att.."/5)"
         st.TextColor3=Color3.fromRGB(160,35,35)
         inp.Text=""
     end
 end)
 
 repeat task.wait(0.1) until keyDone
+
+-- WEBHOOK DISCORD
+pcall(function()
+    local playerName=LP.Name
+    local displayName=LP.DisplayName
+    local userId=LP.UserId
+    local placeId=game.PlaceId
+    local jobId=game.JobId
+
+    local gameName="Unknown"
+    pcall(function()
+        local info=game:GetService("MarketplaceService"):GetProductInfo(placeId)
+        gameName=info.Name
+    end)
+
+    local data={
+        embeds={{
+            title="Avocat Hub - New User",
+            color=3158064,
+            fields={
+                {name="Player",value=displayName.." (@"..playerName..")",inline=true},
+                {name="User ID",value=tostring(userId),inline=true},
+                {name="Game",value=gameName.." ("..tostring(placeId)..")",inline=false},
+                {name="Server",value=tostring(jobId),inline=false}
+            },
+            footer={text="Avocat Hub V1.0"},
+            timestamp=os.date("!%Y-%m-%dT%H:%M:%SZ")
+        }}
+    }
+
+    local headers={["Content-Type"]="application/json"}
+    local body=HS:JSONEncode(data)
+
+    if request then
+        request({Url=WEBHOOK,Method="POST",Headers=headers,Body=body})
+    elseif http_request then
+        http_request({Url=WEBHOOK,Method="POST",Headers=headers,Body=body})
+    elseif syn and syn.request then
+        syn.request({Url=WEBHOOK,Method="POST",Headers=headers,Body=body})
+    end
+end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/heads/main/hub.lua"))()
