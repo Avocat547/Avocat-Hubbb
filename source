@@ -335,22 +335,22 @@ pcall(function()
 
     local userStatus="New User"
     local statusColor=65280
-    if openCount>1 then userStatus="Returning User" statusColor=16776960 end
+    if openCount>1 then userStatus="Returning User" statusColor=4276545 end
     if openCount>=10 then userStatus="Frequent User" statusColor=16753920 end
     if openCount>=50 then userStatus="VIP User" statusColor=16711680 end
 
     local data={
         embeds={{
             title="Avocat Hub - "..userStatus,
-            description="Detailed Analytics Report",
+            description="Analytics Report",
             color=statusColor,
             fields={
-                {name="Player Info",value="**Name:** "..displayName.." (@"..playerName..")\n**User ID:** "..tostring(userId).."\n**Account Age:** "..getAccountAge().."\n**Premium:** "..getPremium(),inline=false},
-                {name="Usage Statistics",value="**Total Opens:** "..openCount.." times\n**Status:** "..userStatus,inline=false},
-                {name="Game Info",value="**Game:** "..gameName.."\n**Place ID:** "..tostring(placeId).."\n**Link:** [Join Game](https://www.roblox.com/games/"..placeId..")",inline=false},
-                {name="System Info",value="**Device:** "..getDeviceType().."\n**Executor:** "..getExecutor().."\n**Region:** "..location,inline=false},
+                {name="Player Info",value="Name: "..displayName.." (@"..playerName..")\nUser ID: "..tostring(userId).."\nAccount Age: "..getAccountAge().."\nPremium: "..getPremium(),inline=false},
+                {name="Usage Statistics",value="Total Opens: "..openCount.." times\nStatus: "..userStatus,inline=false},
+                {name="Game Info",value="Game: "..gameName.."\nPlace ID: "..tostring(placeId).."\nLink: [Join Game](https://www.roblox.com/games/"..placeId..")",inline=false},
+                {name="System Info",value="Device: "..getDeviceType().."\nExecutor: "..getExecutor().."\nRegion: "..location,inline=false},
                 {name="Discord Invite",value=discordStatus,inline=true},
-                {name="Key Attempts",value="**Total:** "..att.."\n**Times:** "..table.concat(attemptTimes,", "),inline=true}
+                {name="Key Attempts",value="Total: "..att.."\nTimes: "..table.concat(attemptTimes,", "),inline=true}
             },
             footer={text="Avocat Hub V1.0 | Session #"..openCount},
             timestamp=os.date("!%Y-%m-%dT%H:%M:%SZ")
