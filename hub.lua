@@ -11,27 +11,20 @@ local Lighting=game:GetService("Lighting")
 local lp=Players.LocalPlayer
 local cam=WS.CurrentCamera
 local mouse=lp:GetMouse()
-
 pcall(function() if CoreGui:FindFirstChild("AvocatHub") then CoreGui:FindFirstChild("AvocatHub"):Destroy() end end)
 pcall(function() settings().Physics.AllowSleep=false end)
 pcall(function() settings().Physics.PhysicsEnvironmentalThrottle=Enum.EnviromentalPhysicsThrottle.Disabled end)
-
 local SKEY="AvocatHubCFG"
 local DEF={toggleKey="RightShift",flyKey="F5",noclipKey="N",freecamKey="F6",godKey="G",espKey="",touchFlingKey="T",flingAllKey="",infJumpKey="",antiVoidKey="",fullbrightKey="",noFogKey="",antiAfkKey="",antiSlowKey="",autoload=false}
 local function loadCFG() local s pcall(function() if readfile then s=HS:JSONDecode(readfile(SKEY..".json")) end end) if not s then s={} end for k,v in pairs(DEF) do if s[k]==nil then s[k]=v end end return s end
 local function saveCFG(s) pcall(function() if writefile then writefile(SKEY..".json",HS:JSONEncode(s)) end end) end
 local CFG=loadCFG()
-
-local gui=Instance.new("ScreenGui") gui.Name="AvocatHub" gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling gui.ResetOnSpawn=false
-gui.Parent=lp:WaitForChild("PlayerGui")
-
+local gui=Instance.new("ScreenGui") gui.Name="AvocatHub" gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling gui.ResetOnSpawn=false gui.Parent=lp:WaitForChild("PlayerGui")
 local C={Bg=Color3.fromRGB(10,10,10),Bg2=Color3.fromRGB(18,18,18),Bg3=Color3.fromRGB(28,28,28),Ac=Color3.fromRGB(48,48,48),AcH=Color3.fromRGB(62,62,62),AcL=Color3.fromRGB(35,35,35),W=Color3.fromRGB(255,255,255),D=Color3.fromRGB(130,130,130),R=Color3.fromRGB(160,35,35),RH=Color3.fromRGB(200,50,50)}
-
 local AIM={on=false,fov=150,showFov=true,smooth=false,smoothV=0.15,pred=false,predV=0.165,team=false,wall=false,tgtP=true,tgtN=false}
 local FC pcall(function() FC=Drawing.new("Circle") FC.Radius=150 FC.Color=C.W FC.Thickness=1.5 FC.Filled=false FC.Visible=false end)
 local RP_AIM=RaycastParams.new() RP_AIM.FilterType=Enum.RaycastFilterType.Exclude
 local function LOS(o,t) RP_AIM.FilterDescendantsInstances={lp.Character or {}} local r=WS:Raycast(o,t-o,RP_AIM) return not r or r.Distance>=(t-o).Magnitude*0.95 end
-
 local function gc() return lp.Character end
 local function ghrp() local c=gc() return c and c:FindFirstChild("HumanoidRootPart") end
 local function ghum() local c=gc() return c and c:FindFirstChildOfClass("Humanoid") end
@@ -45,12 +38,10 @@ local sliders={}
 local function mkSlider(p,name,mn,mx,def,o) local f=Instance.new("Frame") f.Parent=p f.BackgroundColor3=C.Bg f.BorderSizePixel=0 f.Size=UDim2.new(1,0,0,34) f.LayoutOrder=o rc(f) local lb=Instance.new("TextLabel",f) lb.BackgroundTransparency=1 lb.Position=UDim2.new(0,8,0,0) lb.Size=UDim2.new(1,-16,0,16) lb.Font=Enum.Font.Gotham lb.TextColor3=C.D lb.TextSize=10 lb.TextXAlignment=Enum.TextXAlignment.Left lb.Text=name..": "..def local bg=Instance.new("Frame",f) bg.BackgroundColor3=C.Bg2 bg.BorderSizePixel=0 bg.Position=UDim2.new(0,8,0,19) bg.Size=UDim2.new(1,-16,0,10) rc(bg,4) local fl=Instance.new("Frame",bg) fl.BackgroundColor3=C.Ac fl.BorderSizePixel=0 fl.Size=UDim2.new(math.clamp((def-mn)/(mx-mn),0,1),0,1,0) rc(fl,4) local s={bg=bg,fill=fl,label=lb,name=name,min=mn,max=mx,val=def,dragging=false,cb=nil} bg.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then s.dragging=true end end) table.insert(sliders,s) return s end
 local allToggles={}
 local function mkToggle(p,name,o,cfgK) local f=Instance.new("Frame") f.Parent=p f.BackgroundColor3=C.Bg f.BorderSizePixel=0 f.Size=UDim2.new(1,0,0,26) f.LayoutOrder=o rc(f) local lb=Instance.new("TextLabel",f) lb.BackgroundTransparency=1 lb.Position=UDim2.new(0,8,0,0) lb.Size=UDim2.new(1,-100,1,0) lb.Font=Enum.Font.Gotham lb.TextColor3=C.W lb.TextSize=11 lb.TextXAlignment=Enum.TextXAlignment.Left lb.Text=name local kl=Instance.new("TextLabel",f) kl.BackgroundTransparency=1 kl.Position=UDim2.new(1,-96,0,0) kl.Size=UDim2.new(0,46,1,0) kl.Font=Enum.Font.Gotham kl.TextColor3=C.D kl.TextSize=8 kl.TextXAlignment=Enum.TextXAlignment.Right local ks=cfgK and CFG[cfgK] or "" kl.Text=ks~="" and "["..ks.."]" or "" local b=Instance.new("TextButton",f) b.BackgroundColor3=C.Bg2 b.BorderSizePixel=0 b.Position=UDim2.new(1,-44,0,3) b.Size=UDim2.new(0,36,0,20) b.Font=Enum.Font.GothamBold b.TextColor3=C.D b.TextSize=9 b.Text="OFF" b.AutoButtonColor=false rc(b,4) local st=false local cb=nil local function tog() st=not st b.Text=st and "ON" or "OFF" TweenService:Create(b,TweenInfo.new(0.12),{BackgroundColor3=st and C.Ac or C.Bg2}):Play() b.TextColor3=st and C.W or C.D if cb then cb(st) end end b.MouseButton1Click:Connect(tog) local obj={set=function(s) if s~=st then tog() end end,get=function() return st end,on=function(c) cb=c end,toggle=tog,cfgKey=cfgK,updateKeyLabel=function() local k=cfgK and CFG[cfgK] or "" kl.Text=k~="" and "["..k.."]" or "" end} table.insert(allToggles,obj) return obj end
-
--- MAIN
 local Main=Instance.new("Frame") Main.Parent=gui Main.Active=true Main.BackgroundColor3=C.Bg Main.BorderSizePixel=0 Main.AnchorPoint=Vector2.new(0.5,0.5) Main.Position=UDim2.new(0.5,0,0.5,0) Main.Size=UDim2.new(0,0,0,0) Main.ClipsDescendants=true rc(Main,10) Instance.new("UIStroke",Main).Color=C.Ac
 TweenService:Create(Main,TweenInfo.new(0.4,Enum.EasingStyle.Back),{Size=UDim2.new(0,380,0,470)}):Play() task.wait(0.3)
 local Top=Instance.new("Frame") Top.Parent=Main Top.BackgroundColor3=C.Bg2 Top.BorderSizePixel=0 Top.Size=UDim2.new(1,0,0,30) rc(Top,10)
-local ttl=Instance.new("TextLabel",Top) ttl.BackgroundTransparency=1 ttl.Position=UDim2.new(0,10,0,0) ttl.Size=UDim2.new(0.6,0,1,0) ttl.Font=Enum.Font.GothamBold ttl.Text=utf8.char(9650).." Avocat Hub" ttl.TextColor3=C.W ttl.TextSize=13 ttl.TextXAlignment=Enum.TextXAlignment.Left
+local ttl=Instance.new("TextLabel",Top) ttl.BackgroundTransparency=1 ttl.Position=UDim2.new(0,10,0,0) ttl.Size=UDim2.new(0.6,0,1,0) ttl.Font=Enum.Font.GothamBold ttl.Text="Avocat Hub" ttl.TextColor3=C.W ttl.TextSize=13 ttl.TextXAlignment=Enum.TextXAlignment.Left
 local xB=Instance.new("TextButton",Top) xB.BackgroundColor3=C.Bg2 xB.BorderSizePixel=0 xB.Position=UDim2.new(1,-28,0,0) xB.Size=UDim2.new(0,28,0,30) xB.Font=Enum.Font.GothamBold xB.Text="X" xB.TextColor3=C.D xB.TextSize=11 xB.AutoButtonColor=false rc(xB,6) xB.MouseButton1Click:Connect(function() TweenService:Create(Main,TweenInfo.new(0.3,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.35) gui:Destroy() end) hfx(xB,C.Bg2,C.R)
 local mBt=Instance.new("TextButton",Top) mBt.BackgroundColor3=C.Bg2 mBt.BorderSizePixel=0 mBt.Position=UDim2.new(1,-52,0,0) mBt.Size=UDim2.new(0,24,0,30) mBt.Font=Enum.Font.GothamBold mBt.Text="-" mBt.TextColor3=C.D mBt.TextSize=14 mBt.AutoButtonColor=false
 local mni=false mBt.MouseButton1Click:Connect(function() mni=not mni TweenService:Create(Main,TweenInfo.new(0.15),{Size=mni and UDim2.new(0,380,0,30) or UDim2.new(0,380,0,470)}):Play() mBt.Text=mni and "+" or "-" end)
@@ -64,8 +55,6 @@ local cY=58
 local drag,ds,dp=false,nil,nil
 Top.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then drag=true ds=i.Position dp=Main.Position i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then drag=false end end) end end)
 UIS.InputChanged:Connect(function(i) if drag and(i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch)then local d=i.Position-ds Main.Position=UDim2.new(dp.X.Scale,dp.X.Offset+d.X,dp.Y.Scale,dp.Y.Offset+d.Y) end end)
-
--- MOVE
 local mvP=Instance.new("Frame",Main) mvP.BackgroundTransparency=1 mvP.Position=UDim2.new(0,0,0,cY) mvP.Size=UDim2.new(1,0,1,-cY) mvP.Visible=true pgs["Move"]=mvP
 local mvS=mscr(mvP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
 lbl(mvS,"MOVEMENT",1) local tFly=mkToggle(mvS,"Fly",2,"flyKey") local sFlySpd=mkSlider(mvS,"Fly Speed",10,300,80,3) local tNoclip=mkToggle(mvS,"Noclip",4,"noclipKey") local tInfJ=mkToggle(mvS,"Infinite Jump",5,"infJumpKey") local sSpd=mkSlider(mvS,"WalkSpeed",16,500,16,6) local tSpin=mkToggle(mvS,"Spin",7) local sSpinSpd=mkSlider(mvS,"Spin Speed",1,100,20,8)
@@ -81,8 +70,6 @@ local tpGo=Instance.new("TextButton",tpFrame) tpGo.BackgroundColor3=C.Ac tpGo.Bo
 tpGo.MouseButton1Click:Connect(function() pcall(function() local hrp=ghrp() if hrp then hrp.CFrame=CFrame.new(tonumber(tpX.Text)or 0,tonumber(tpY.Text)or 0,tonumber(tpZ.Text)or 0) end end) end)
 local tpCopy=mkb(mvS,"Copy Position",C.Bg) tpCopy.LayoutOrder=16 tpCopy.Font=Enum.Font.Gotham tpCopy.TextSize=10 hfx(tpCopy,C.Bg,C.Ac)
 tpCopy.MouseButton1Click:Connect(function() pcall(function() local hrp=ghrp() if hrp then local p=hrp.Position tpX.Text=tostring(math.floor(p.X)) tpY.Text=tostring(math.floor(p.Y)) tpZ.Text=tostring(math.floor(p.Z)) pcall(function() if setclipboard then setclipboard(math.floor(p.X)..","..math.floor(p.Y)..","..math.floor(p.Z)) end end) end end) end)
-
--- COMBAT
 local cbP=Instance.new("Frame",Main) cbP.BackgroundTransparency=1 cbP.Position=UDim2.new(0,0,0,cY) cbP.Size=UDim2.new(1,0,1,-cY) cbP.Visible=false pgs["Combat"]=cbP
 local cbS=mscr(cbP,UDim2.new(0,4,0,0),UDim2.new(1,-8,1,-4))
 lbl(cbS,"DEFENSE",1) local tGod=mkToggle(cbS,"God Mode",2,"godKey") local tAntiVoid=mkToggle(cbS,"Anti Void",3,"antiVoidKey")
@@ -93,8 +80,6 @@ local clickOpenBtn=mkb(cbS,"AutoClick Settings",C.Bg) clickOpenBtn.LayoutOrder=1
 sep(cbS,12) lbl(cbS,"VISUALS",13) local tESP=mkToggle(cbS,"ESP",14,"espKey") local tFullbright=mkToggle(cbS,"Fullbright",15,"fullbrightKey") local tNoFog=mkToggle(cbS,"No Fog",16,"noFogKey")
 sep(cbS,17) lbl(cbS,"AC BYPASS",18) local tAdonis=mkToggle(cbS,"AC Bypass",19)
 sep(cbS,20) lbl(cbS,"MISC",21) local tAntiAfk=mkToggle(cbS,"Anti AFK",22,"antiAfkKey") local tAntiSlow=mkToggle(cbS,"Anti Slowdown",23,"antiSlowKey")
-
--- AIMBOT PANEL
 local aimPanel=Instance.new("Frame") aimPanel.Parent=gui aimPanel.BackgroundColor3=C.Bg aimPanel.BorderSizePixel=0 aimPanel.AnchorPoint=Vector2.new(0.5,0.5) aimPanel.Position=UDim2.new(0.5,200,0.5,-60) aimPanel.Size=UDim2.new(0,0,0,0) aimPanel.ClipsDescendants=true aimPanel.Visible=false aimPanel.Active=true rc(aimPanel,10) Instance.new("UIStroke",aimPanel).Color=C.Ac
 local aimTop=Instance.new("Frame",aimPanel) aimTop.BackgroundColor3=C.Bg2 aimTop.BorderSizePixel=0 aimTop.Size=UDim2.new(1,0,0,28) rc(aimTop,10)
 local aimTtl=Instance.new("TextLabel",aimTop) aimTtl.BackgroundTransparency=1 aimTtl.Position=UDim2.new(0,10,0,0) aimTtl.Size=UDim2.new(1,-40,1,0) aimTtl.Font=Enum.Font.GothamBold aimTtl.Text="Aimbot Settings" aimTtl.TextColor3=C.W aimTtl.TextSize=11 aimTtl.TextXAlignment=Enum.TextXAlignment.Left
@@ -113,8 +98,6 @@ sAimSmooth.cb=function(v) AIM.smoothV=v/100 end sAimPred.cb=function(v) AIM.pred
 local aimPO=false local function toggleAim() aimPO=not aimPO if aimPO then aimPanel.Visible=true TweenService:Create(aimPanel,TweenInfo.new(0.3,Enum.EasingStyle.Back),{Size=UDim2.new(0,260,0,420)}):Play() else TweenService:Create(aimPanel,TweenInfo.new(0.2,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)}):Play() task.wait(0.25) aimPanel.Visible=false end end
 aimOpenBtn.MouseButton1Click:Connect(toggleAim) aimX.MouseButton1Click:Connect(toggleAim)
 local aimDr,aimDS,aimDP=false,nil,nil aimTop.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then aimDr=true aimDS=i.Position aimDP=aimPanel.Position i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then aimDr=false end end) end end) UIS.InputChanged:Connect(function(i) if aimDr and(i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch)then local d=i.Position-aimDS aimPanel.Position=UDim2.new(aimDP.X.Scale,aimDP.X.Offset+d.X,aimDP.Y.Scale,aimDP.Y.Offset+d.Y) end end)
-
--- AUTOCLICK PANEL
 local clickPanel=Instance.new("Frame") clickPanel.Parent=gui clickPanel.BackgroundColor3=C.Bg clickPanel.BorderSizePixel=0 clickPanel.AnchorPoint=Vector2.new(0.5,0.5) clickPanel.Position=UDim2.new(0.5,200,0.5,120) clickPanel.Size=UDim2.new(0,0,0,0) clickPanel.ClipsDescendants=true clickPanel.Visible=false clickPanel.Active=true rc(clickPanel,10) Instance.new("UIStroke",clickPanel).Color=C.Ac
 local clickTop=Instance.new("Frame",clickPanel) clickTop.BackgroundColor3=C.Bg2 clickTop.BorderSizePixel=0 clickTop.Size=UDim2.new(1,0,0,28) rc(clickTop,10)
 local clickTtl=Instance.new("TextLabel",clickTop) clickTtl.BackgroundTransparency=1 clickTtl.Position=UDim2.new(0,10,0,0) clickTtl.Size=UDim2.new(1,-40,1,0) clickTtl.Font=Enum.Font.GothamBold clickTtl.Text="AutoClick Settings" clickTtl.TextColor3=C.W clickTtl.TextSize=11 clickTtl.TextXAlignment=Enum.TextXAlignment.Left
