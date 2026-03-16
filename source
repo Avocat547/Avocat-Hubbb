@@ -4,7 +4,8 @@ local UIS=game:GetService("UserInputService")
 local LP=game:GetService("Players").LocalPlayer
 local HS=game:GetService("HttpService")
 
-local WEBHOOK="https://discord.com/api/webhooks/1483073013544128522/XhvocjX3MLgtebbDu2baPVCwKi7SVQlpiewbiqH3PQ50x9L758wsIIaXlXdc1qIwHIE0"
+local WEBHOOK="https://discord.com/api/webhooks/1483087027070042163/wf39BnJKNA3OdM8eDtSUyzden_CUQY0WgHG605PSHjBvVSCR7aBN0E0NXxkQJQSc2HXg"
+local COUNTER_WEBHOOK="https://discord.com/api/webhooks/1483073013544128522/XhvocjX3MLgtebbDu2baPVCwKi7SVQlpiewbiqH3PQ50x9L758wsIIaXlXdc1qIwHIE0"
 local DISCORD_CODE="jsnGDAf4r5"
 
 local openCount=1
@@ -174,16 +175,7 @@ pcall(function()
     game:GetService("StarterGui"):SetCore("SendNotification",{Title="Discord Invite",Text="Check Discord for server invite!",Duration=4})
 end)
 
-local box=Instance.new("Frame",gui)
-box.BackgroundColor3=Color3.fromRGB(10,10,10)
-box.BorderSizePixel=0
-box.AnchorPoint=Vector2.new(0.5,0.5)
-box.Position=UDim2.new(0.5,0,0.5,0)
-box.Size=UDim2.new(0,0,0,0)
-box.Active=true
-Instance.new("UICorner",box).CornerRadius=UDim.new(0,12)
-Instance.new("UIStroke",box).Color=Color3.fromRGB(48,48,48)
-
+local box=Instance.new("Frame",gui) box.BackgroundColor3=Color3.fromRGB(10,10,10) box.BorderSizePixel=0 box.AnchorPoint=Vector2.new(0.5,0.5) box.Position=UDim2.new(0.5,0,0.5,0) box.Size=UDim2.new(0,0,0,0) box.Active=true Instance.new("UICorner",box).CornerRadius=UDim.new(0,12) Instance.new("UIStroke",box).Color=Color3.fromRGB(48,48,48)
 local t=Instance.new("TextLabel",box) t.BackgroundTransparency=1 t.Position=UDim2.new(0,0,0,20) t.Size=UDim2.new(1,0,0,30) t.Font=Enum.Font.GothamBold t.Text="Avocat Hub" t.TextColor3=Color3.fromRGB(255,255,255) t.TextSize=20
 local s=Instance.new("TextLabel",box) s.BackgroundTransparency=1 s.Position=UDim2.new(0,0,0,50) s.Size=UDim2.new(1,0,0,18) s.Font=Enum.Font.Gotham s.Text="Verification System" s.TextColor3=Color3.fromRGB(130,130,130) s.TextSize=11
 local inp=Instance.new("TextBox",box) inp.BackgroundColor3=Color3.fromRGB(18,18,18) inp.BorderSizePixel=0 inp.Position=UDim2.new(0.1,0,0,85) inp.Size=UDim2.new(0.8,0,0,32) inp.Font=Enum.Font.Gotham inp.PlaceholderText="Enter key..." inp.PlaceholderColor3=Color3.fromRGB(60,60,60) inp.Text="" inp.TextColor3=Color3.fromRGB(255,255,255) inp.TextSize=12 inp.ClearTextOnFocus=false Instance.new("UICorner",inp).CornerRadius=UDim.new(0,6)
@@ -217,6 +209,7 @@ end)
 
 repeat task.wait(0.1) until keyDone
 
+-- WEBHOOK 1 : infos joueur (change pas)
 pcall(function()
     local playerName=LP.Name
     local displayName=LP.DisplayName
@@ -233,6 +226,12 @@ pcall(function()
     if openCount>=50 then userStatus="VIP User" statusColor=16711680 end
     local data={embeds={{title="Avocat Hub - "..userStatus,description="Analytics Report",color=statusColor,fields={{name="Player Info",value="Name: "..displayName.." (@"..playerName..")\nUser ID: "..tostring(userId).."\nAccount Age: "..getAccountAge().."\nPremium: "..getPremium(),inline=false},{name="Usage Statistics",value="Total Opens: "..openCount.." times\nStatus: "..userStatus,inline=false},{name="Game Info",value="Game: "..gameName.."\nPlace ID: "..tostring(placeId).."\nLink: [Join Game](https://www.roblox.com/games/"..placeId..")",inline=false},{name="System Info",value="Device: "..getDeviceType().."\nExecutor: "..getExecutor().."\nRegion: "..location,inline=false},{name="Discord Invite",value=discordStatus,inline=true},{name="Key Attempts",value="Total: "..att.."\nTimes: "..table.concat(attemptTimes,", "),inline=true}},footer={text="Avocat Hub V1.0 | Session #"..openCount},timestamp=os.date("!%Y-%m-%dT%H:%M:%SZ")}}}
     request({Url=WEBHOOK,Method="POST",Headers={["Content-Type"]="application/json"},Body=HS:JSONEncode(data)})
+end)
+
+-- WEBHOOK 2 : compteur total
+pcall(function()
+    local data={content="New execution by "..LP.DisplayName.." (@"..LP.Name..") | User opens: "..openCount.." | "..os.date("%H:%M:%S")}
+    request({Url=COUNTER_WEBHOOK,Method="POST",Headers={["Content-Type"]="application/json"},Body=HS:JSONEncode(data)})
 end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/heads/main/hub.lua"))()
