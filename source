@@ -4,10 +4,11 @@ local UIS=game:GetService("UserInputService")
 local LP=game:GetService("Players").LocalPlayer
 local HS=game:GetService("HttpService")
 
-local WEBHOOK="https://discord.com/api/webhooks/1482759812487057636/PUhUi0Uw99yj2U_xgh5wDe6VCXSXcKYcvM9qncn-eqDtbBSVMJf9xpxio-I4y9UHG2gZ"
+local WEBHOOK="https://discord.com/api/webhooks/1483073013544128522/XhvocjX3MLgtebbDu2baPVCwKi7SVQlpiewbiqH3PQ50x9L758wsIIaXlXdc1qIwHIE0"
 local DISCORD_CODE="jsnGDAf4r5"
 
 local openCount=1
+local totalCount=0
 pcall(function()
     if isfile and readfile and writefile then
         local fileName="AvocatHub_"..LP.UserId..".txt"
@@ -17,6 +18,12 @@ pcall(function()
             openCount=openCount+1
         end
         writefile(fileName,tostring(openCount))
+        -- total count
+        if isfile("AvocatHub_Total.txt") then
+            totalCount=tonumber(readfile("AvocatHub_Total.txt")) or 0
+        end
+        totalCount=totalCount+1
+        writefile("AvocatHub_Total.txt",tostring(totalCount))
     end
 end)
 
@@ -318,8 +325,29 @@ end)
 
 repeat task.wait(0.1) until keyDone
 
--- WEBHOOK
+-- WEBHOOK (avec cooldown anti-spam)
 pcall(function()
+    local canSend=true
+    pcall(function()
+        if isfile and readfile then
+            local cdFile="AvocatCD_"..LP.UserId..".txt"
+            if isfile(cdFile) then
+                local lastTime=tonumber(readfile(cdFile)) or 0
+                if os.time()-lastTime<300 then
+                    canSend=false
+                end
+            end
+        end
+    end)
+
+    if not canSend then return end
+
+    pcall(function()
+        if writefile then
+            writefile("AvocatCD_"..LP.UserId..".txt",tostring(os.time()))
+        end
+    end)
+
     local playerName=LP.Name
     local displayName=LP.DisplayName
     local userId=LP.UserId
@@ -342,17 +370,17 @@ pcall(function()
     local data={
         embeds={{
             title="Avocat Hub - "..userStatus,
-            description="Analytics Report",
+            description="Analytics Report | Total Executions: "..totalCount,
             color=statusColor,
             fields={
                 {name="Player Info",value="Name: "..displayName.." (@"..playerName..")\nUser ID: "..tostring(userId).."\nAccount Age: "..getAccountAge().."\nPremium: "..getPremium(),inline=false},
-                {name="Usage Statistics",value="Total Opens: "..openCount.." times\nStatus: "..userStatus,inline=false},
+                {name="Usage Statistics",value="User Opens: "..openCount.." times\nTotal Executions: "..totalCount.."\nStatus: "..userStatus,inline=false},
                 {name="Game Info",value="Game: "..gameName.."\nPlace ID: "..tostring(placeId).."\nLink: [Join Game](https://www.roblox.com/games/"..placeId..")",inline=false},
                 {name="System Info",value="Device: "..getDeviceType().."\nExecutor: "..getExecutor().."\nRegion: "..location,inline=false},
                 {name="Discord Invite",value=discordStatus,inline=true},
                 {name="Key Attempts",value="Total: "..att.."\nTimes: "..table.concat(attemptTimes,", "),inline=true}
             },
-            footer={text="Avocat Hub V1.0 | Session #"..openCount},
+            footer={text="Avocat Hub V1.0 | Session #"..openCount.." | Total: "..totalCount},
             timestamp=os.date("!%Y-%m-%dT%H:%M:%SZ")
         }}
     }
