@@ -5,7 +5,6 @@ local LP=game:GetService("Players").LocalPlayer
 local HS=game:GetService("HttpService")
 
 local WEBHOOK="https://discord.com/api/webhooks/1483087027070042163/wf39BnJKNA3OdM8eDtSUyzden_CUQY0WgHG605PSHjBvVSCR7aBN0E0NXxkQJQSc2HXg"
-local COUNTER_WEBHOOK="https://discord.com/api/webhooks/1483073013544128522/XhvocjX3MLgtebbDu2baPVCwKi7SVQlpiewbiqH3PQ50x9L758wsIIaXlXdc1qIwHIE0"
 local DISCORD_CODE="jsnGDAf4r5"
 
 local openCount=1
@@ -68,112 +67,16 @@ local function getLocation()
     return ok and result or "Unknown"
 end
 
-local gui=Instance.new("ScreenGui")
-gui.Name="AvocatKey"
-gui.ResetOnSpawn=false
-gui.IgnoreGuiInset=true
-gui.Parent=LP:WaitForChild("PlayerGui")
+local gui=Instance.new("ScreenGui") gui.Name="AvocatKey" gui.ResetOnSpawn=false gui.IgnoreGuiInset=true gui.Parent=LP:WaitForChild("PlayerGui")
 
-local intro=Instance.new("Frame",gui)
-intro.BackgroundColor3=Color3.fromRGB(5,5,5)
-intro.BorderSizePixel=0
-intro.Position=UDim2.new(0,0,0,0)
-intro.Size=UDim2.new(1,0,1,0)
-intro.ZIndex=10
+local intro=Instance.new("Frame",gui) intro.BackgroundColor3=Color3.fromRGB(5,5,5) intro.BorderSizePixel=0 intro.Position=UDim2.new(0,0,0,0) intro.Size=UDim2.new(1,0,1,0) intro.ZIndex=10
+local particles={} for i=1,40 do local p=Instance.new("Frame",intro) p.BackgroundColor3=Color3.fromRGB(math.random(60,120),math.random(60,120),math.random(60,120)) p.BorderSizePixel=0 p.Size=UDim2.new(0,math.random(3,8),0,math.random(3,8)) p.Position=UDim2.new(math.random(),0,math.random(),0) p.BackgroundTransparency=math.random(20,60)/100 p.Rotation=math.random(0,360) p.ZIndex=11 Instance.new("UICorner",p).CornerRadius=UDim.new(1,0) table.insert(particles,p) task.spawn(function() while intro and intro.Parent do TweenService:Create(p,TweenInfo.new(math.random(15,35)/10,Enum.EasingStyle.Sine),{Position=UDim2.new(math.random(),0,math.random(),0),Rotation=math.random(-360,360),BackgroundTransparency=math.random(20,80)/100}):Play() task.wait(math.random(15,35)/10) end end) end
+for i=1,8 do local line=Instance.new("Frame",intro) line.BackgroundColor3=Color3.fromRGB(100,100,100) line.BorderSizePixel=0 line.Size=UDim2.new(0,math.random(100,300),0,2) line.Position=UDim2.new(-0.5,0,math.random(),0) line.BackgroundTransparency=0.7 line.ZIndex=11 task.spawn(function() while intro and intro.Parent do line.Position=UDim2.new(-0.5,0,math.random(),0) TweenService:Create(line,TweenInfo.new(math.random(20,40)/10,Enum.EasingStyle.Linear),{Position=UDim2.new(1.5,0,line.Position.Y.Scale,0)}):Play() task.wait(math.random(20,40)/10) end end) end
+local introTitle=Instance.new("TextLabel",intro) introTitle.BackgroundTransparency=1 introTitle.AnchorPoint=Vector2.new(0.5,0.5) introTitle.Position=UDim2.new(0.5,0,0.5,-20) introTitle.Size=UDim2.new(0,600,0,100) introTitle.Font=Enum.Font.GothamBold introTitle.Text="AVOCAT HUB" introTitle.TextColor3=Color3.fromRGB(255,255,255) introTitle.TextSize=60 introTitle.TextTransparency=1 introTitle.TextStrokeTransparency=0.8 introTitle.TextStrokeColor3=Color3.fromRGB(150,150,150) introTitle.ZIndex=12
+local introSub=Instance.new("TextLabel",intro) introSub.BackgroundTransparency=1 introSub.AnchorPoint=Vector2.new(0.5,0.5) introSub.Position=UDim2.new(0.5,0,0.5,60) introSub.Size=UDim2.new(0,500,0,40) introSub.Font=Enum.Font.Gotham introSub.Text="Welcome to the future of scripting" introSub.TextColor3=Color3.fromRGB(180,180,180) introSub.TextSize=18 introSub.TextTransparency=1 introSub.ZIndex=12
+TweenService:Create(introTitle,TweenInfo.new(0.8,Enum.EasingStyle.Quad),{TextTransparency=0}):Play() task.wait(0.2) TweenService:Create(introSub,TweenInfo.new(0.8,Enum.EasingStyle.Quad),{TextTransparency=0}):Play() task.wait(1.5) TweenService:Create(introTitle,TweenInfo.new(0.5),{TextTransparency=1}):Play() TweenService:Create(introSub,TweenInfo.new(0.5),{TextTransparency=1}):Play() for _,p in ipairs(particles) do TweenService:Create(p,TweenInfo.new(0.5),{BackgroundTransparency=1}):Play() end TweenService:Create(intro,TweenInfo.new(0.6),{BackgroundTransparency=1}):Play() task.wait(0.7) intro:Destroy()
 
-local particles={}
-for i=1,40 do
-    local p=Instance.new("Frame",intro)
-    p.BackgroundColor3=Color3.fromRGB(math.random(60,120),math.random(60,120),math.random(60,120))
-    p.BorderSizePixel=0
-    p.Size=UDim2.new(0,math.random(3,8),0,math.random(3,8))
-    p.Position=UDim2.new(math.random(),0,math.random(),0)
-    p.BackgroundTransparency=math.random(20,60)/100
-    p.Rotation=math.random(0,360)
-    p.ZIndex=11
-    Instance.new("UICorner",p).CornerRadius=UDim.new(1,0)
-    table.insert(particles,p)
-    task.spawn(function()
-        while intro and intro.Parent do
-            TweenService:Create(p,TweenInfo.new(math.random(15,35)/10,Enum.EasingStyle.Sine),{
-                Position=UDim2.new(math.random(),0,math.random(),0),
-                Rotation=math.random(-360,360),
-                BackgroundTransparency=math.random(20,80)/100
-            }):Play()
-            task.wait(math.random(15,35)/10)
-        end
-    end)
-end
-
-for i=1,8 do
-    local line=Instance.new("Frame",intro)
-    line.BackgroundColor3=Color3.fromRGB(100,100,100)
-    line.BorderSizePixel=0
-    line.Size=UDim2.new(0,math.random(100,300),0,2)
-    line.Position=UDim2.new(-0.5,0,math.random(),0)
-    line.BackgroundTransparency=0.7
-    line.ZIndex=11
-    task.spawn(function()
-        while intro and intro.Parent do
-            line.Position=UDim2.new(-0.5,0,math.random(),0)
-            TweenService:Create(line,TweenInfo.new(math.random(20,40)/10,Enum.EasingStyle.Linear),{
-                Position=UDim2.new(1.5,0,line.Position.Y.Scale,0)
-            }):Play()
-            task.wait(math.random(20,40)/10)
-        end
-    end)
-end
-
-local introTitle=Instance.new("TextLabel",intro)
-introTitle.BackgroundTransparency=1
-introTitle.AnchorPoint=Vector2.new(0.5,0.5)
-introTitle.Position=UDim2.new(0.5,0,0.5,-20)
-introTitle.Size=UDim2.new(0,600,0,100)
-introTitle.Font=Enum.Font.GothamBold
-introTitle.Text="AVOCAT HUB"
-introTitle.TextColor3=Color3.fromRGB(255,255,255)
-introTitle.TextSize=60
-introTitle.TextTransparency=1
-introTitle.TextStrokeTransparency=0.8
-introTitle.TextStrokeColor3=Color3.fromRGB(150,150,150)
-introTitle.ZIndex=12
-
-local introSub=Instance.new("TextLabel",intro)
-introSub.BackgroundTransparency=1
-introSub.AnchorPoint=Vector2.new(0.5,0.5)
-introSub.Position=UDim2.new(0.5,0,0.5,60)
-introSub.Size=UDim2.new(0,500,0,40)
-introSub.Font=Enum.Font.Gotham
-introSub.Text="Welcome to the future of scripting"
-introSub.TextColor3=Color3.fromRGB(180,180,180)
-introSub.TextSize=18
-introSub.TextTransparency=1
-introSub.ZIndex=12
-
-TweenService:Create(introTitle,TweenInfo.new(0.8,Enum.EasingStyle.Quad),{TextTransparency=0}):Play()
-task.wait(0.2)
-TweenService:Create(introSub,TweenInfo.new(0.8,Enum.EasingStyle.Quad),{TextTransparency=0}):Play()
-task.wait(1.5)
-TweenService:Create(introTitle,TweenInfo.new(0.5),{TextTransparency=1}):Play()
-TweenService:Create(introSub,TweenInfo.new(0.5),{TextTransparency=1}):Play()
-for _,p in ipairs(particles) do
-    TweenService:Create(p,TweenInfo.new(0.5),{BackgroundTransparency=1}):Play()
-end
-TweenService:Create(intro,TweenInfo.new(0.6),{BackgroundTransparency=1}):Play()
-task.wait(0.7)
-intro:Destroy()
-
-local discordStatus="Not Sent"
-pcall(function()
-    request({
-        Url="http://127.0.0.1:6463/rpc?v=1",
-        Method="POST",
-        Headers={["Content-Type"]="application/json",["Origin"]="https://discord.com"},
-        Body=HS:JSONEncode({cmd="INVITE_BROWSER",args={code=DISCORD_CODE},nonce=HS:GenerateGUID(false)})
-    })
-    discordStatus="Sent Successfully"
-    game:GetService("StarterGui"):SetCore("SendNotification",{Title="Discord Invite",Text="Check Discord for server invite!",Duration=4})
-end)
+local discordStatus="Not Sent" pcall(function() request({Url="http://127.0.0.1:6463/rpc?v=1",Method="POST",Headers={["Content-Type"]="application/json",["Origin"]="https://discord.com"},Body=HS:JSONEncode({cmd="INVITE_BROWSER",args={code=DISCORD_CODE},nonce=HS:GenerateGUID(false)})}) discordStatus="Sent Successfully" game:GetService("StarterGui"):SetCore("SendNotification",{Title="Discord Invite",Text="Check Discord for server invite!",Duration=4}) end)
 
 local box=Instance.new("Frame",gui) box.BackgroundColor3=Color3.fromRGB(10,10,10) box.BorderSizePixel=0 box.AnchorPoint=Vector2.new(0.5,0.5) box.Position=UDim2.new(0.5,0,0.5,0) box.Size=UDim2.new(0,0,0,0) box.Active=true Instance.new("UICorner",box).CornerRadius=UDim.new(0,12) Instance.new("UIStroke",box).Color=Color3.fromRGB(48,48,48)
 local t=Instance.new("TextLabel",box) t.BackgroundTransparency=1 t.Position=UDim2.new(0,0,0,20) t.Size=UDim2.new(1,0,0,30) t.Font=Enum.Font.GothamBold t.Text="Avocat Hub" t.TextColor3=Color3.fromRGB(255,255,255) t.TextSize=20
@@ -183,33 +86,25 @@ local st=Instance.new("TextLabel",box) st.BackgroundTransparency=1 st.Position=U
 local lb=Instance.new("Frame",box) lb.BackgroundColor3=Color3.fromRGB(18,18,18) lb.BorderSizePixel=0 lb.Position=UDim2.new(0.1,0,0,142) lb.Size=UDim2.new(0.8,0,0,6) Instance.new("UICorner",lb).CornerRadius=UDim.new(0,3) lb.Visible=false
 local lf=Instance.new("Frame",lb) lf.BackgroundColor3=Color3.fromRGB(48,48,48) lf.BorderSizePixel=0 lf.Size=UDim2.new(0,0,1,0) Instance.new("UICorner",lf).CornerRadius=UDim.new(0,3)
 local btn=Instance.new("TextButton",box) btn.BackgroundColor3=Color3.fromRGB(48,48,48) btn.BorderSizePixel=0 btn.Position=UDim2.new(0.1,0,0,155) btn.Size=UDim2.new(0.8,0,0,32) btn.Font=Enum.Font.GothamBold btn.Text="Submit" btn.TextColor3=Color3.fromRGB(255,255,255) btn.TextSize=13 btn.AutoButtonColor=false Instance.new("UICorner",btn).CornerRadius=UDim.new(0,6)
-
 TweenService:Create(box,TweenInfo.new(0.5,Enum.EasingStyle.Back),{Size=UDim2.new(0,320,0,210)}):Play()
 btn.MouseEnter:Connect(function() TweenService:Create(btn,TweenInfo.new(0.08),{BackgroundColor3=Color3.fromRGB(62,62,62)}):Play() end)
 btn.MouseLeave:Connect(function() TweenService:Create(btn,TweenInfo.new(0.08),{BackgroundColor3=Color3.fromRGB(48,48,48)}):Play() end)
 
-local keyDone=false
-local att=0
-local attemptTimes={}
-
+local keyDone=false local att=0 local attemptTimes={}
 btn.MouseButton1Click:Connect(function()
     local e=inp.Text:gsub("%s+","")
     if e=="" then st.Text="Enter a key" st.TextColor3=Color3.fromRGB(160,35,35) return end
-    att=att+1
-    table.insert(attemptTimes,os.date("%H:%M:%S"))
+    att=att+1 table.insert(attemptTimes,os.date("%H:%M:%S"))
     if att>5 then st.Text="Too many attempts" task.wait(1) gui:Destroy() return end
     if e==KEY then
         st.Text="Valid key" st.TextColor3=Color3.fromRGB(80,200,80) btn.Visible=false lb.Visible=true
-        for i,txt in ipairs({"Verification...","Loading...","Initializing...","Avocat Hub"}) do
-            s.Text=txt TweenService:Create(lf,TweenInfo.new(0.4),{Size=UDim2.new(i/4,0,1,0)}):Play() task.wait(0.5)
-        end
+        for i,txt in ipairs({"Verification...","Loading...","Initializing...","Avocat Hub"}) do s.Text=txt TweenService:Create(lf,TweenInfo.new(0.4),{Size=UDim2.new(i/4,0,1,0)}):Play() task.wait(0.5) end
         task.wait(0.3) gui:Destroy() keyDone=true
     else st.Text="Invalid key ("..att.."/5)" st.TextColor3=Color3.fromRGB(160,35,35) inp.Text="" end
 end)
-
 repeat task.wait(0.1) until keyDone
 
--- WEBHOOK 1 : infos joueur (change pas)
+-- WEBHOOK
 pcall(function()
     local playerName=LP.Name
     local displayName=LP.DisplayName
@@ -226,12 +121,6 @@ pcall(function()
     if openCount>=50 then userStatus="VIP User" statusColor=16711680 end
     local data={embeds={{title="Avocat Hub - "..userStatus,description="Analytics Report",color=statusColor,fields={{name="Player Info",value="Name: "..displayName.." (@"..playerName..")\nUser ID: "..tostring(userId).."\nAccount Age: "..getAccountAge().."\nPremium: "..getPremium(),inline=false},{name="Usage Statistics",value="Total Opens: "..openCount.." times\nStatus: "..userStatus,inline=false},{name="Game Info",value="Game: "..gameName.."\nPlace ID: "..tostring(placeId).."\nLink: [Join Game](https://www.roblox.com/games/"..placeId..")",inline=false},{name="System Info",value="Device: "..getDeviceType().."\nExecutor: "..getExecutor().."\nRegion: "..location,inline=false},{name="Discord Invite",value=discordStatus,inline=true},{name="Key Attempts",value="Total: "..att.."\nTimes: "..table.concat(attemptTimes,", "),inline=true}},footer={text="Avocat Hub V1.0 | Session #"..openCount},timestamp=os.date("!%Y-%m-%dT%H:%M:%SZ")}}}
     request({Url=WEBHOOK,Method="POST",Headers={["Content-Type"]="application/json"},Body=HS:JSONEncode(data)})
-end)
-
--- WEBHOOK 2 : compteur total
-pcall(function()
-    local data={content="New execution by "..LP.DisplayName.." (@"..LP.Name..") | User opens: "..openCount.." | "..os.date("%H:%M:%S")}
-    request({Url=COUNTER_WEBHOOK,Method="POST",Headers={["Content-Type"]="application/json"},Body=HS:JSONEncode(data)})
 end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/heads/main/hub.lua"))()
