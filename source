@@ -1,206 +1,129 @@
 pcall(function()
-    local pg = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-    local existing = pg:FindFirstChild("AvocatLoader")
-    if existing then existing:Destroy() end
+    local player = game:GetService("Players").LocalPlayer
+    local pg = player:WaitForChild("PlayerGui")
+
+    local old = pg:FindFirstChild("AvocatLoader")
+    if old then
+        old:Destroy()
+    end
 end)
 
 local TweenService = game:GetService("TweenService")
-local LP = game:GetService("Players").LocalPlayer
+local Players = game:GetService("Players")
 
+local LP = Players.LocalPlayer
 local HUB_URL = "https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/main/hub.lua"
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "AvocatLoader"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.Parent = LP:WaitForChild("PlayerGui")
 
-local box = Instance.new("Frame", gui)
-box.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-box.BorderSizePixel = 0
+local box = Instance.new("Frame")
+box.Parent = gui
 box.AnchorPoint = Vector2.new(0.5, 0.5)
 box.Position = UDim2.new(0.5, 0, 0.5, 0)
-box.Size = UDim2.new(0, 0, 0, 0)
-box.ClipsDescendants = true
+box.Size = UDim2.new(0, 320, 0, 80)
+box.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+box.BorderSizePixel = 0
 
-Instance.new("UICorner", box).CornerRadius = UDim.new(0, 10)
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = box
 
-local stroke = Instance.new("UIStroke", box)
-stroke.Color = Color3.fromRGB(34, 34, 34)
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(45, 45, 45)
 stroke.Thickness = 1
+stroke.Parent = box
 
-local topBar = Instance.new("Frame", box)
-topBar.BackgroundColor3 = Color3.fromRGB(13, 13, 13)
-topBar.BorderSizePixel = 0
-topBar.Size = UDim2.new(1, 0, 0, 36)
-
-Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
-
-local topBarMask = Instance.new("Frame", topBar)
-topBarMask.BackgroundColor3 = Color3.fromRGB(13, 13, 13)
-topBarMask.BorderSizePixel = 0
-topBarMask.Size = UDim2.new(1, 0, 0.5, 0)
-topBarMask.Position = UDim2.new(0, 0, 0.5, 0)
-
-local accentColor = Color3.fromRGB(80, 200, 120)
-
-local accentLine = Instance.new("Frame", box)
-accentLine.BackgroundColor3 = accentColor
-accentLine.BorderSizePixel = 0
-accentLine.Position = UDim2.new(0, 0, 0, 36)
-accentLine.Size = UDim2.new(1, 0, 0, 1)
-accentLine.BackgroundTransparency = 0.5
-
-local dot = Instance.new("Frame", topBar)
-dot.BackgroundColor3 = accentColor
-dot.BorderSizePixel = 0
-dot.Size = UDim2.new(0, 8, 0, 8)
-dot.Position = UDim2.new(0, 14, 0.5, -4)
-dot.ZIndex = 4
-
-Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
-
-local dotGlow = Instance.new("Frame", dot)
-dotGlow.BackgroundColor3 = accentColor
-dotGlow.BackgroundTransparency = 0.6
-dotGlow.BorderSizePixel = 0
-dotGlow.Size = UDim2.new(1, 6, 1, 6)
-dotGlow.Position = UDim2.new(0, -3, 0, -3)
-dotGlow.ZIndex = 3
-
-Instance.new("UICorner", dotGlow).CornerRadius = UDim.new(1, 0)
-
-task.spawn(function()
-    while dot and dot.Parent do
-        TweenService:Create(dotGlow, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            BackgroundTransparency = 0.85
-        }):Play()
-
-        task.wait(0.9)
-
-        TweenService:Create(dotGlow, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            BackgroundTransparency = 0.35
-        }):Play()
-
-        task.wait(0.9)
-    end
-end)
-
-local title = Instance.new("TextLabel", topBar)
+local title = Instance.new("TextLabel")
+title.Parent = box
 title.BackgroundTransparency = 1
-title.Position = UDim2.new(0, 30, 0, 0)
-title.Size = UDim2.new(1, -80, 1, 0)
+title.Position = UDim2.new(0, 18, 0, 14)
+title.Size = UDim2.new(1, -36, 0, 20)
 title.Font = Enum.Font.GothamBold
 title.Text = "Avocat Hub"
-title.TextColor3 = Color3.fromRGB(240, 240, 240)
-title.TextSize = 13
+title.TextColor3 = Color3.fromRGB(235, 235, 235)
+title.TextSize = 14
 title.TextXAlignment = Enum.TextXAlignment.Left
-title.ZIndex = 4
 
-local version = Instance.new("TextLabel", topBar)
-version.BackgroundTransparency = 1
-version.Position = UDim2.new(1, -50, 0, 0)
-version.Size = UDim2.new(0, 40, 1, 0)
-version.Font = Enum.Font.Gotham
-version.Text = "v1.0"
-version.TextColor3 = Color3.fromRGB(120, 120, 125)
-version.TextSize = 11
-version.TextXAlignment = Enum.TextXAlignment.Right
-version.ZIndex = 4
-
-local status = Instance.new("TextLabel", box)
-status.BackgroundTransparency = 1
-status.Position = UDim2.new(0, 18, 0, 50)
-status.Size = UDim2.new(1, -70, 0, 14)
-status.Font = Enum.Font.Gotham
-status.Text = "Loading..."
-status.TextColor3 = Color3.fromRGB(180, 180, 185)
-status.TextSize = 12
-status.TextXAlignment = Enum.TextXAlignment.Left
-
-local percent = Instance.new("TextLabel", box)
+local percent = Instance.new("TextLabel")
+percent.Parent = box
 percent.BackgroundTransparency = 1
-percent.Position = UDim2.new(1, -50, 0, 50)
-percent.Size = UDim2.new(0, 32, 0, 14)
+percent.Position = UDim2.new(1, -60, 0, 14)
+percent.Size = UDim2.new(0, 42, 0, 20)
 percent.Font = Enum.Font.GothamMedium
 percent.Text = "0%"
-percent.TextColor3 = accentColor
-percent.TextSize = 12
+percent.TextColor3 = Color3.fromRGB(170, 170, 170)
+percent.TextSize = 13
 percent.TextXAlignment = Enum.TextXAlignment.Right
 
-local barBg = Instance.new("Frame", box)
-barBg.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+local barBg = Instance.new("Frame")
+barBg.Parent = box
+barBg.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 barBg.BorderSizePixel = 0
-barBg.Position = UDim2.new(0, 18, 0, 74)
-barBg.Size = UDim2.new(1, -36, 0, 5)
+barBg.Position = UDim2.new(0, 18, 0, 48)
+barBg.Size = UDim2.new(1, -36, 0, 6)
 
-Instance.new("UICorner", barBg).CornerRadius = UDim.new(1, 0)
+local barBgCorner = Instance.new("UICorner")
+barBgCorner.CornerRadius = UDim.new(1, 0)
+barBgCorner.Parent = barBg
 
-local barFill = Instance.new("Frame", barBg)
-barFill.BackgroundColor3 = accentColor
+local barFill = Instance.new("Frame")
+barFill.Parent = barBg
+barFill.BackgroundColor3 = Color3.fromRGB(155, 155, 155)
 barFill.BorderSizePixel = 0
 barFill.Size = UDim2.new(0, 0, 1, 0)
 
-Instance.new("UICorner", barFill).CornerRadius = UDim.new(1, 0)
+local barFillCorner = Instance.new("UICorner")
+barFillCorner.CornerRadius = UDim.new(1, 0)
+barFillCorner.Parent = barFill
 
-local infoLine = Instance.new("TextLabel", box)
-infoLine.BackgroundTransparency = 1
-infoLine.Position = UDim2.new(0, 18, 0, 88)
-infoLine.Size = UDim2.new(1, -36, 0, 12)
-infoLine.Font = Enum.Font.Gotham
-infoLine.Text = "Preparing hub..."
-infoLine.TextColor3 = Color3.fromRGB(105, 105, 115)
-infoLine.TextSize = 10
-infoLine.TextXAlignment = Enum.TextXAlignment.Left
-infoLine.TextTruncate = Enum.TextTruncate.AtEnd
+local function setProgress(value)
+    value = math.clamp(value, 0, 100)
+    percent.Text = tostring(value) .. "%"
 
-TweenService:Create(box, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-    Size = UDim2.new(0, 320, 0, 108)
-}):Play()
-
-task.wait(0.5)
-
-local steps = {
-    "Loading...",
-    "Initializing...",
-    "Almost ready...",
-    "Launching hub..."
-}
-
-for i, txt in ipairs(steps) do
-    status.Text = txt
-
-    local progress = i / #steps
-
-    TweenService:Create(barFill, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {
-        Size = UDim2.new(progress, 0, 1, 0)
+    TweenService:Create(barFill, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(value / 100, 0, 1, 0)
     }):Play()
-
-    local startVal = tonumber((percent.Text:gsub("%%", ""))) or 0
-    local endVal = math.floor(progress * 100)
-
-    for j = 1, 20 do
-        percent.Text = math.floor(startVal + (endVal - startVal) * (j / 20)) .. "%"
-        task.wait(0.02)
-    end
-
-    task.wait(0.1)
 end
 
-task.wait(0.3)
+for i = 1, 70 do
+    setProgress(i)
+    task.wait(0.015)
+end
 
-TweenService:Create(box, TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {
-    Size = UDim2.new(0, 0, 0, 0)
-}):Play()
-
-task.wait(0.4)
-gui:Destroy()
-
-local ok, err = pcall(function()
-    loadstring(game:HttpGet(HUB_URL .. "?cb=" .. tostring(os.time())))()
+local source
+local okGet, getErr = pcall(function()
+    source = game:HttpGet(HUB_URL .. "?cb=" .. tostring(os.time()))
 end)
 
-if not ok then
-    warn("[Avocat Hub] Load error:", err)
+if not okGet or not source or source == "" then
+    setProgress(0)
+    warn("[Avocat Hub] GitHub load failed:", getErr or "empty response")
+    task.wait(1)
+    gui:Destroy()
+    return
+end
+
+for i = 71, 100 do
+    setProgress(i)
+    task.wait(0.01)
+end
+
+task.wait(0.2)
+gui:Destroy()
+
+local fn, compileErr = loadstring(source)
+
+if not fn then
+    warn("[Avocat Hub] Lua compile error:", compileErr)
+    return
+end
+
+local okRun, runErr = pcall(fn)
+
+if not okRun then
+    warn("[Avocat Hub] Runtime error:", runErr)
 end
