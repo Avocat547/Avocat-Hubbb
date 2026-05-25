@@ -1,1 +1,4 @@
-online
+status=maintenance
+message=We are updating the hub, please come back soon
+eta=2 hours
+ping=true
