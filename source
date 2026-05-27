@@ -19,7 +19,7 @@ local HUB_URL = "https://raw.githubusercontent.com/Avocat547/Avocat-Hubbb/refs/h
 local accentColor = Color3.fromRGB(180, 180, 180)
 local openCount = 1
 
--- Tout dans pcall pour éviter tout blocage
+
 pcall(function()
     if isfile and readfile and writefile then
         local f = "AvocatHub_" .. LP.UserId .. ".txt"
@@ -55,7 +55,7 @@ local function getExecutor()
     return "Unknown"
 end
 
--- GetProductInfo dans thread isolé, timeout 2s
+
 local gameName = "Unknown"
 task.spawn(function()
     pcall(function()
@@ -64,7 +64,7 @@ task.spawn(function()
 end)
 task.wait(2) -- attend max 2s puis continue quoi qu'il arrive
 
--- GUI dans CoreGui directement, évite WaitForChild qui bloque
+
 local CoreGui = game:GetService("CoreGui")
 
 local gui = Instance.new("ScreenGui")
@@ -220,7 +220,7 @@ for i, txt in ipairs(steps) do
     task.wait(0.1)
 end
 
--- Webhook thread séparé
+
 task.spawn(function()
     pcall(function()
         if not request then return end
